@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Gridea</title>
-    <updated>2020-09-14T09:20:19.933Z</updated>
+    <updated>2020-09-14T09:27:45.525Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,45 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[折腾Centos随记]]></title>
+        <id>https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/</id>
+        <link href="https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/">
+        </link>
+        <updated>2020-09-14T09:22:11.000Z</updated>
+        <content type="html"><![CDATA[<p>pkill -f uWSGI -9 杀掉所有进程<br>
+cd /etc/yum.repos.d/</p>
+<p>生成requirements.txt（虚拟环境下操作）<br>
+pip freeze &gt;requirements.txt<br>
+pip install -r requirements.txt</p>
+<p>docker安装<br>
+yum update<br>
+yum install -y yum-utils device-mapper-persistent-data lvm2<br>
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</p>
+<h1 id="gunicorn启动指令">gunicorn启动指令</h1>
+<p>gunicorn start:app -c gunicorn.conf.py</p>
+<p>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')</p>
+<h1 id="创建纯净的虚拟环境">创建纯净的虚拟环境</h1>
+<pre><code>vim /etc/profile
+# 将下面内容添加到文件的最下面
+PATH=$PATH:/usr/local/python3/bin
+
+#是添加的进行生效命令
+source /etc/profile
+</code></pre>
+<p>virtualenv --python=python3  venv</p>
+<h1 id="centos换源">centos换源</h1>
+<p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</p>
+<p>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
+<p>yum clean all</p>
+<p>yum makecache</p>
+<p>yum update</p>
+<h1 id="centos7安装python381">centos7安装python3.8.1</h1>
+<p>https://blog.csdn.net/wohiusdashi/article/details/89358071</p>
+<h1 id="centos7安装mysql">centos7安装mysql</h1>
+<p>https://blog.csdn.net/weixin_43616817/article/details/106378512</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[TEST]]></title>
         <id>https://Morn-zh.github.io/post/test/</id>

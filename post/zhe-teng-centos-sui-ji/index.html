@@ -2,7 +2,7 @@
 <html lang="zh-CN">
  <head>
      <meta charset="utf-8" />
-  <title>TEST | Gridea</title>
+  <title>折腾Centos随记 | Gridea</title>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
   <link rel="stylesheet" href="https://Morn-zh.github.io/styles/main.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -79,11 +79,40 @@
      <div class="post-page">
       <div class="post animated fadeInDown">
        <div class="post-title">
-        <h3><a>TEST</a></h3>
+        <h3><a>折腾Centos随记</a></h3>
        </div>
        <div class="post-content">
-        <h1 id="这是标题">这是标题</h1>
-<p>这是内容</p>
+        <p>pkill -f uWSGI -9 杀掉所有进程<br>
+cd /etc/yum.repos.d/</p>
+<p>生成requirements.txt（虚拟环境下操作）<br>
+pip freeze &gt;requirements.txt<br>
+pip install -r requirements.txt</p>
+<p>docker安装<br>
+yum update<br>
+yum install -y yum-utils device-mapper-persistent-data lvm2<br>
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</p>
+<h1 id="gunicorn启动指令">gunicorn启动指令</h1>
+<p>gunicorn start:app -c gunicorn.conf.py</p>
+<p>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')</p>
+<h1 id="创建纯净的虚拟环境">创建纯净的虚拟环境</h1>
+<pre><code>vim /etc/profile
+# 将下面内容添加到文件的最下面
+PATH=$PATH:/usr/local/python3/bin
+
+#是添加的进行生效命令
+source /etc/profile
+</code></pre>
+<p>virtualenv --python=python3  venv</p>
+<h1 id="centos换源">centos换源</h1>
+<p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</p>
+<p>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
+<p>yum clean all</p>
+<p>yum makecache</p>
+<p>yum update</p>
+<h1 id="centos7安装python381">centos7安装python3.8.1</h1>
+<p>https://blog.csdn.net/wohiusdashi/article/details/89358071</p>
+<h1 id="centos7安装mysql">centos7安装mysql</h1>
+<p>https://blog.csdn.net/weixin_43616817/article/details/106378512</p>
 
        </div>
        <div class="post-footer">
@@ -105,16 +134,14 @@
         <a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
        </div>
        <div class="twitter">
-        <a class="fa fa-twitter" href="http://twitter.com/home?status=,https://Morn-zh.github.io/post/test/,;"></a>
+        <a class="fa fa-twitter" href="http://twitter.com/home?status=,https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/,;"></a>
        </div>
       </div>
       <div class="pagination">
        <ul class="clearfix">
 
-        <li class="pre pagbuttons"><a class="btn" role="navigation" href="https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/" title="折腾Centos随记">上一篇</a></li>
-         
         
-        <li class="next pagbuttons"><a class="btn" role="navigation" href="https://Morn-zh.github.io/post/hello-gridea/" title=" Hello Gridea">下一篇</a></li>
+        <li class="next pagbuttons"><a class="btn" role="navigation" href="https://Morn-zh.github.io/post/test/" title=" TEST">下一篇</a></li>
         
        </ul>
       </div>
