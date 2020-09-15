@@ -34,11 +34,28 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#gunicorn%E5%90%AF%E5%8A%A8%E6%8C%87%E4%BB%A4">gunicorn启动指令</a></li>
-<li><a href="#%E5%88%9B%E5%BB%BA%E7%BA%AF%E5%87%80%E7%9A%84%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">创建纯净的虚拟环境</a></li>
-<li><a href="#centos%E6%8D%A2%E6%BA%90">centos换源</a></li>
-<li><a href="#centos7%E5%AE%89%E8%A3%85python381">centos7安装python3.8.1</a></li>
-<li><a href="#centos7%E5%AE%89%E8%A3%85mysql">centos7安装mysql</a></li>
+<li><a href="#ox00-%E7%8E%AF%E5%A2%83%E4%BB%A5%E5%8F%8A%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84">ox00 环境以及文件结构</a>
+<ul>
+<li><a href="#%E5%BD%93%E5%89%8D%E7%8E%AF%E5%A2%83">当前环境</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84">文件结构</a></li>
+</ul>
+</li>
+<li><a href="#ox01-%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">ox01 创建虚拟环境</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85virtualenv">安装virtualenv</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">创建虚拟环境</a></li>
+<li><a href="#%E6%BF%80%E6%B4%BB%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">激活虚拟环境</a></li>
+</ul>
+</li>
+<li><a href="#ox02-%E5%AE%89%E8%A3%85gunicorngevent">ox02 安装gunicorn+gevent</a></li>
+<li><a href="#ox03-%E9%85%8D%E7%BD%AEgunicorn">ox03 配置gunicorn</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">创建配置文件</a></li>
+<li><a href="#%E8%BF%90%E8%A1%8Cgunicorn">运行gunicorn</a></li>
+<li><a href="#%E8%A7%A3%E9%87%8A%E8%AF%B4%E6%98%8E">解释说明</a></li>
+</ul>
+</li>
+<li><a href="#ox04-%E5%90%8E%E7%BB%AD">ox04 后续</a></li>
 </ul>
 
           </div>
@@ -85,45 +102,124 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">折腾Centos随记</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">gunicorn+gevent部署flask</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-09-14 / 2 min read
+          2020-09-15 / 4 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://Morn-zh.github.io/post-images/zhe-teng-centos-sui-ji.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://Morn-zh.github.io/post-images/gunicorngevent-bu-shu-flask.png" alt="">
         
         <div class="post-content yue">
-          <p>pkill -f uWSGI -9 杀掉所有进程<br>
-cd /etc/yum.repos.d/</p>
-<p>生成requirements.txt（虚拟环境下操作）<br>
-pip freeze &gt;requirements.txt<br>
-pip install -r requirements.txt</p>
-<p>docker安装<br>
-yum update<br>
-yum install -y yum-utils device-mapper-persistent-data lvm2<br>
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</p>
-<h1 id="gunicorn启动指令">gunicorn启动指令</h1>
-<p>gunicorn start:app -c gunicorn.conf.py</p>
-<p>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')</p>
-<h1 id="创建纯净的虚拟环境">创建纯净的虚拟环境</h1>
+          <p>之前试过用<strong>uwsgi+nginx+supervisor</strong>部署flask项目，最近因为舍友需要，帮着搭建一个flask的api，同样是需要部署上线的，趁此机会尝试另外一种部署方式<strong>gunicorn+gevent</strong></p>
+<p>提前说结论，<strong>gunicorn+gevent</strong>部署更加简单</p>
+<h1 id="ox00-环境以及文件结构">ox00 环境以及文件结构</h1>
+<h2 id="当前环境">当前环境</h2>
+<ul>
+<li>centos 7.3</li>
+<li>python3.8.1</li>
+</ul>
+<h2 id="文件结构">文件结构</h2>
+<p>最终的的文件结构是这样的，其中<strong>myproject</strong>是我们的项目文件，里面包含了虚拟环境的文件夹<strong>venv</strong>，flask的主体文件<strong>main.py</strong>，以及gunicorn的配置文件<strong>gunicorn.conf.py</strong>，具体内容会在后面一一展示</p>
+<pre><code>.
+└── myproject
+    ├── gunicorn.conf.py
+    ├── main.py
+    └── venv
+        ├── bin
+        ├── lib
+        └── pyvenv.cfg
+
+4 directories, 3 files
+</code></pre>
+<p>先进入我们的项目文件夹内，假设项目文件位于/home/myproject，进入项目文件并进行后续操作</p>
+<pre><code>cd /home/myproject
+</code></pre>
+<h1 id="ox01-创建虚拟环境">ox01 创建虚拟环境</h1>
+<p>为了不污染当前的环境，安装并创建虚拟环境</p>
+<h2 id="安装virtualenv">安装virtualenv</h2>
+<pre><code>pip install virtualenv
+</code></pre>
+<p>测试安装是否成功，输入后如果显示所有命令，则成功</p>
+<pre><code>virtual -h
+</code></pre>
+<p>如果显示没有找到该命令，可能需要去配置下环境变量，步骤如下</p>
 <pre><code>vim /etc/profile
-# 将下面内容添加到文件的最下面
+# 将下面内容添加到文件的最下面,添加内容为python3的安装目录，根据实际情况进行更改
 PATH=$PATH:/usr/local/python3/bin
 
-#是添加的进行生效命令
+# 更新配置
 source /etc/profile
 </code></pre>
-<p>virtualenv --python=python3  venv</p>
-<h1 id="centos换源">centos换源</h1>
-<p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</p>
-<p>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
-<p>yum clean all</p>
-<p>yum makecache</p>
-<p>yum update</p>
-<h1 id="centos7安装python381">centos7安装python3.8.1</h1>
-<p>https://blog.csdn.net/wohiusdashi/article/details/89358071</p>
-<h1 id="centos7安装mysql">centos7安装mysql</h1>
-<p>https://blog.csdn.net/weixin_43616817/article/details/106378512</p>
+<h2 id="创建虚拟环境">创建虚拟环境</h2>
+<pre><code>virtualenv --python=python3  venv
+</code></pre>
+<p>其中venv是自定义的，运行后会出现venv的文件夹，之后需要的包都会被安装在里面</p>
+<h2 id="激活虚拟环境">激活虚拟环境</h2>
+<pre><code>source venv/bin/activate
+</code></pre>
+<p>激活成功能看到命令行前面出现我们命名的虚拟环境的名字<strong>venv</strong>，此时已经处于虚拟环境中，后续操作<strong>将在虚拟环境中进行</strong></p>
+<p>ps：退出虚拟环境的命令</p>
+<pre><code>deactivate
+</code></pre>
+<h1 id="ox02-安装gunicorngevent">ox02 安装gunicorn+gevent</h1>
+<p><strong>在虚拟环境中</strong>安装下flask程序中需要用到的库</p>
+<p>你说你不知道需要哪些？直接运行下flask不就知道了，依次安装下需要用到的库</p>
+<pre><code># main.py 为flask的主体文件，后面会展示
+python main.py
+</code></pre>
+<p>安装今天的主角gunicorn+gevent</p>
+<pre><code class="language-bash">pip install gunicorn gevent
+</code></pre>
+<p>展示下main.py吧，就是最简单的那种falsk程序</p>
+<pre><code># main.py
+# 文件名main，后面启动时会用到
+from flask import Flask
+
+# 变量名app，后面启动时会用到
+app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+    return 'here is index'
+
+if __name__ == '__main__':
+	# 运行在0.0.0.0，端口为9000,端口号会在后面验证是否部署成功时用到
+    app.run(debug=True,host = '0.0.0.0',port=9000)
+</code></pre>
+<h1 id="ox03-配置gunicorn">ox03 配置gunicorn</h1>
+<h2 id="创建配置文件">创建配置文件</h2>
+<p>创建<strong>gunicorn.conf.py</strong>文件，并且将以下内容<strong>直接复制</strong>进去</p>
+<pre><code>vim gunicorn.conf.py
+</code></pre>
+<pre><code>import multiprocessing
+import gevent.monkey
+gevent.monkey.patch_all()
+
+workers = multiprocessing.cpu_count()*2    # 定义同时开启的处理请求的进程数量，根据网站流量适当调整
+worker_class = &quot;gevent&quot;   # 采用gevent库，支持异步处理请求，提高吞吐量
+bind = &quot;0.0.0.0:9000&quot;
+daemon = True
+# daemon为true意味着开启后台运行，默认为False
+
+# 以下为日志配置，可选内容，选取的话需要在项目文件内载创建个log文件夹，mkdir log
+# loglevel = 'debug'
+# pidfile = &quot;log/gunicorn.pid&quot;
+# accesslog = &quot;log/access.log&quot;
+# errorlog = &quot;log/debug.log&quot;
+
+</code></pre>
+<h2 id="运行gunicorn">运行gunicorn</h2>
+<pre><code>gunicorn main:app -c gunicorn.conf.py
+</code></pre>
+<h2 id="解释说明">解释说明</h2>
+<p>main为flask主体文件名，app为创建flask对象时使用的变量名，gunicorn.conf.py为gunicorn的配置文件</p>
+<p>至此，部署完毕，可以试着访问下你的外网ip地址加端口，例:47.100.91.124:9000</p>
+<h1 id="ox04-后续">ox04 后续</h1>
+<p>因为gunicorn只有启动的选项，需要关闭的话，你可能会用到如下指令</p>
+<pre><code>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')
+</code></pre>
+<p>原理是筛选端口，关闭对应的服务，其中9000就是之前设置的端口号</p>
 
         </div>
 
@@ -132,21 +228,12 @@ source /etc/profile
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://Morn-zh.github.io/post/gunicorngevent-bu-shu-flask/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  gunicorn+gevent部署flask
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://Morn-zh.github.io/post/test/">
+              <a href="https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/">
                 <h3 class="post-title">
-                  TEST
+                  折腾Centos随记
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>
