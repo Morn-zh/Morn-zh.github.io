@@ -34,11 +34,14 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#gunicorn%E5%90%AF%E5%8A%A8%E6%8C%87%E4%BB%A4">gunicorn启动指令</a></li>
-<li><a href="#%E5%88%9B%E5%BB%BA%E7%BA%AF%E5%87%80%E7%9A%84%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">创建纯净的虚拟环境</a></li>
-<li><a href="#centos%E6%8D%A2%E6%BA%90">centos换源</a></li>
-<li><a href="#centos7%E5%AE%89%E8%A3%85python381">centos7安装python3.8.1</a></li>
-<li><a href="#centos7%E5%AE%89%E8%A3%85mysql">centos7安装mysql</a></li>
+<li><a href="#cf-of-%E8%BF%9B%E4%BD%8D-%E6%BA%A2%E5%87%BA">CF OF 进位 溢出</a>
+<ul>
+<li><a href="#0x01-%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98">0x01 我的问题</a></li>
+<li><a href="#0x02-%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86">0x02 相关的知识</a></li>
+<li><a href="#0x03-%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%91%A2">0x03 怎么理解呢？</a></li>
+<li><a href="#0x04-%E5%9B%9E%E5%88%B0%E9%97%AE%E9%A2%98">0x04 回到问题</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -85,45 +88,101 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">折腾Centos随记</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">CF OF 进位 溢出</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-09-14 / 2 min read
+          2020-10-30 / 3 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://Morn-zh.github.io/post-images/zhe-teng-centos-sui-ji.png" alt="">
-        
         <div class="post-content yue">
-          <p>pkill -f uWSGI -9 杀掉所有进程<br>
-cd /etc/yum.repos.d/</p>
-<p>生成requirements.txt（虚拟环境下操作）<br>
-pip freeze &gt;requirements.txt<br>
-pip install -r requirements.txt</p>
-<p>docker安装<br>
-yum update<br>
-yum install -y yum-utils device-mapper-persistent-data lvm2<br>
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</p>
-<h1 id="gunicorn启动指令">gunicorn启动指令</h1>
-<p>gunicorn start:app -c gunicorn.conf.py</p>
-<p>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')</p>
-<h1 id="创建纯净的虚拟环境">创建纯净的虚拟环境</h1>
-<pre><code>vim /etc/profile
-# 将下面内容添加到文件的最下面
-PATH=$PATH:/usr/local/python3/bin
-
-#是添加的进行生效命令
-source /etc/profile
-</code></pre>
-<p>virtualenv --python=python3  venv</p>
-<h1 id="centos换源">centos换源</h1>
-<p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</p>
-<p>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
-<p>yum clean all</p>
-<p>yum makecache</p>
-<p>yum update</p>
-<h1 id="centos7安装python381">centos7安装python3.8.1</h1>
-<p>https://blog.csdn.net/wohiusdashi/article/details/89358071</p>
-<h1 id="centos7安装mysql">centos7安装mysql</h1>
-<p>https://blog.csdn.net/weixin_43616817/article/details/106378512</p>
+          <h1 id="cf-of-进位-溢出">CF OF 进位 溢出</h1>
+<h2 id="0x01-我的问题">0x01 我的问题</h2>
+<ul>
+<li>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</li>
+</ul>
+<p>想要直接看答案，直接跳转<strong>0x04 回到问题</strong>，想要理解过程可以接着往下看</p>
+<h2 id="0x02-相关的知识">0x02 相关的知识</h2>
+<p>解答疑问之前，先明确下，溢出是<strong>所要表示的数值</strong>超出了<strong>本身能够表示的范围</strong></p>
+<p>以8位寄存器为例，来看看在将<strong>操作数</strong>视为<strong>无符号数</strong>和<strong>有符号数</strong>时能够表示的范围</p>
+<p>操作数 xxxx xxxx</p>
+<p>无符号数 xxxx xxxx</p>
+<p>有符号数 符号位+xxx xxxx</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无符号数</td>
+<td>0~2<sup>8</sup>-1</td>
+</tr>
+<tr>
+<td>有符号数</td>
+<td>-2<sup>7</sup>~2<sup>7</sup>-1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>标志位CF/OF为1时，表示的含义</strong></p>
+<table>
+<thead>
+<tr>
+<th>标志位</th>
+<th>含义</th>
+<th>表示结果是否正确（将进位值作为权值考虑在内）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CF=1</td>
+<td><strong>无符号数</strong>运算超出范围</td>
+<td><strong>依旧正确</strong></td>
+</tr>
+<tr>
+<td>OF=1</td>
+<td><strong>有符号数</strong>运算超出范围</td>
+<td>错误</td>
+</tr>
+</tbody>
+</table>
+<p>例1：操作数看做无符号数，关注CF<br>
+<img src="https://Morn-zh.github.io/post-images/1604056428774.png" alt="" loading="lazy"></p>
+<p>例2：操作数看做无符号数，关注CF</p>
+<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/1604056465337.png" alt="" loading="lazy"></figure>
+<p>将例1看做有符号数，关注OF</p>
+<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/1604056485295.png" alt="" loading="lazy"></figure>
+<p>将例2看做有符号数，关注OF</p>
+<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/1604056493045.png" alt="" loading="lazy"></figure>
+<h2 id="0x03-怎么理解呢">0x03 怎么理解呢？</h2>
+<p>处理器会<strong>同时</strong>按照<strong>无符号</strong>和<strong>有符号</strong>运算法则进行运算，并且设置CF和OF两个标志位</p>
+<p>==&gt;也就是说操作数进入运算器后，运算器会进行两次运算，分别设置CF和OF标志位</p>
+<p><strong>至于如何利用这两个设置好的标志位，这将取决于程序员</strong></p>
+<ul>
+<li>如果程序员想要进行<strong>有符号数运算</strong>，那么将关注<strong>OF</strong>的情况，通过OF标志位判断计算结果是否溢出</li>
+<li>如果程序员想要进行<strong>无符号数运算</strong>，那么将关注<strong>CF</strong>的情况，通过CF标志位判断是否需要进位</li>
+</ul>
+<p>另外，还可以这样说</p>
+<ul>
+<li>对于<strong>无符号数</strong>来说，只有是否<strong>进位</strong>，不存在溢出</li>
+<li>对于<strong>有符号数</strong>来说，只有是否<strong>溢出</strong>，不存在进位</li>
+</ul>
+<p>存在这样的关系</p>
+<p>无符号数 &lt;------&gt; 进位 &lt;------&gt; CF</p>
+<p>有符号数 &lt;------&gt; 溢出 &lt;------&gt; OF</p>
+<h2 id="0x04-回到问题">0x04 回到问题</h2>
+<p>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</p>
+<p>A：进位不一定溢出，溢出也不一定进位，因为这两个概念对应两个不同的标志位CF、OF，而这两个标志位又是相对有符号数和无符号数来说的。</p>
+<ul>
+<li>
+<p>如果我们将操作数看做无符号数，此时只需要考虑是否进位，与是否溢出的无关</p>
+</li>
+<li>
+<p>如果将操作数看做有符号数，此时我们应该关心运算结果是否溢出，与是否进位无关</p>
+</li>
+</ul>
+<p>如果看不懂，可以回看理解的过程</p>
+<p>如果理解或者解答有误，请及时联系，我将第一时间进行更正，万分谢谢！</p>
 
         </div>
 
@@ -132,16 +191,16 @@ source /etc/profile
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
+
+          
+            <div class="next-post">
               <a href="https://Morn-zh.github.io/post/gunicorngevent-bu-shu-flask/">
                 <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
                   gunicorn+gevent部署flask
+                  <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>
             </div>
-          
-
           
         </div>
 
