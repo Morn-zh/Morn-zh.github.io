@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Morn-zh</title>
 <meta name="description" content="我等着，等着你" />
-<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1604056521078">
+<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1604056666074">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://Morn-zh.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1604056521078" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1604056666074" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Morn-zh</h1>
       </div>
@@ -34,14 +34,10 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#cf-of-%E8%BF%9B%E4%BD%8D-%E6%BA%A2%E5%87%BA">CF OF 进位 溢出</a>
-<ul>
 <li><a href="#0x01-%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98">0x01 我的问题</a></li>
 <li><a href="#0x02-%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A5%E8%AF%86">0x02 相关的知识</a></li>
 <li><a href="#0x03-%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%91%A2">0x03 怎么理解呢？</a></li>
 <li><a href="#0x04-%E5%9B%9E%E5%88%B0%E9%97%AE%E9%A2%98">0x04 回到问题</a></li>
-</ul>
-</li>
 </ul>
 
           </div>
@@ -94,13 +90,12 @@
         </div>
         
         <div class="post-content yue">
-          <h1 id="cf-of-进位-溢出">CF OF 进位 溢出</h1>
-<h2 id="0x01-我的问题">0x01 我的问题</h2>
+          <h1 id="0x01-我的问题">0x01 我的问题</h1>
 <ul>
 <li>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</li>
 </ul>
 <p>想要直接看答案，直接跳转<strong>0x04 回到问题</strong>，想要理解过程可以接着往下看</p>
-<h2 id="0x02-相关的知识">0x02 相关的知识</h2>
+<h1 id="0x02-相关的知识">0x02 相关的知识</h1>
 <p>解答疑问之前，先明确下，溢出是<strong>所要表示的数值</strong>超出了<strong>本身能够表示的范围</strong></p>
 <p>以8位寄存器为例，来看看在将<strong>操作数</strong>视为<strong>无符号数</strong>和<strong>有符号数</strong>时能够表示的范围</p>
 <p>操作数 xxxx xxxx</p>
@@ -154,7 +149,7 @@
 <figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/1604056485295.png" alt="" loading="lazy"></figure>
 <p>将例2看做有符号数，关注OF</p>
 <figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/1604056493045.png" alt="" loading="lazy"></figure>
-<h2 id="0x03-怎么理解呢">0x03 怎么理解呢？</h2>
+<h1 id="0x03-怎么理解呢">0x03 怎么理解呢？</h1>
 <p>处理器会<strong>同时</strong>按照<strong>无符号</strong>和<strong>有符号</strong>运算法则进行运算，并且设置CF和OF两个标志位</p>
 <p>==&gt;也就是说操作数进入运算器后，运算器会进行两次运算，分别设置CF和OF标志位</p>
 <p><strong>至于如何利用这两个设置好的标志位，这将取决于程序员</strong></p>
@@ -170,7 +165,7 @@
 <p>存在这样的关系</p>
 <p>无符号数 &lt;------&gt; 进位 &lt;------&gt; CF</p>
 <p>有符号数 &lt;------&gt; 溢出 &lt;------&gt; OF</p>
-<h2 id="0x04-回到问题">0x04 回到问题</h2>
+<h1 id="0x04-回到问题">0x04 回到问题</h1>
 <p>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</p>
 <p>A：进位不一定溢出，溢出也不一定进位，因为这两个概念对应两个不同的标志位CF、OF，而这两个标志位又是相对有符号数和无符号数来说的。</p>
 <ul>

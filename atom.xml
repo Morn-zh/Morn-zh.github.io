@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2020-10-30T11:15:25.164Z</updated>
+    <updated>2020-10-30T11:17:52.902Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -16,13 +16,12 @@
         <link href="https://Morn-zh.github.io/post/cf-of-jin-wei-yi-chu/">
         </link>
         <updated>2020-10-30T11:12:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="cf-of-进位-溢出">CF OF 进位 溢出</h1>
-<h2 id="0x01-我的问题">0x01 我的问题</h2>
+        <content type="html"><![CDATA[<h1 id="0x01-我的问题">0x01 我的问题</h1>
 <ul>
 <li>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</li>
 </ul>
 <p>想要直接看答案，直接跳转<strong>0x04 回到问题</strong>，想要理解过程可以接着往下看</p>
-<h2 id="0x02-相关的知识">0x02 相关的知识</h2>
+<h1 id="0x02-相关的知识">0x02 相关的知识</h1>
 <p>解答疑问之前，先明确下，溢出是<strong>所要表示的数值</strong>超出了<strong>本身能够表示的范围</strong></p>
 <p>以8位寄存器为例，来看看在将<strong>操作数</strong>视为<strong>无符号数</strong>和<strong>有符号数</strong>时能够表示的范围</p>
 <p>操作数 xxxx xxxx</p>
@@ -76,7 +75,7 @@
 <figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/1604056485295.png" alt="" loading="lazy"></figure>
 <p>将例2看做有符号数，关注OF</p>
 <figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/1604056493045.png" alt="" loading="lazy"></figure>
-<h2 id="0x03-怎么理解呢">0x03 怎么理解呢？</h2>
+<h1 id="0x03-怎么理解呢">0x03 怎么理解呢？</h1>
 <p>处理器会<strong>同时</strong>按照<strong>无符号</strong>和<strong>有符号</strong>运算法则进行运算，并且设置CF和OF两个标志位</p>
 <p>==&gt;也就是说操作数进入运算器后，运算器会进行两次运算，分别设置CF和OF标志位</p>
 <p><strong>至于如何利用这两个设置好的标志位，这将取决于程序员</strong></p>
@@ -92,7 +91,7 @@
 <p>存在这样的关系</p>
 <p>无符号数 &lt;------&gt; 进位 &lt;------&gt; CF</p>
 <p>有符号数 &lt;------&gt; 溢出 &lt;------&gt; OF</p>
-<h2 id="0x04-回到问题">0x04 回到问题</h2>
+<h1 id="0x04-回到问题">0x04 回到问题</h1>
 <p>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</p>
 <p>A：进位不一定溢出，溢出也不一定进位，因为这两个概念对应两个不同的标志位CF、OF，而这两个标志位又是相对有符号数和无符号数来说的。</p>
 <ul>
