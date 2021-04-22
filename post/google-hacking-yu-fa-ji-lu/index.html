@@ -33,7 +33,36 @@
             文章目录
           </p>
           <div class="toc-container hidden lg:block">
-            
+            <ul class="markdownIt-TOC">
+<li><a href="#google-hacking">Google Hacking</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2">基本检索</a></li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E6%A3%80%E7%B4%A2">高级检索</a>
+<ul>
+<li><a href="#site">site</a></li>
+<li><a href="#inurl">inurl</a></li>
+<li><a href="#intitle">intitle</a></li>
+<li><a href="#intext">intext</a></li>
+<li><a href="#allinurl">allinurl</a></li>
+<li><a href="#filetype">filetype</a></li>
+<li><a href="#link">link</a></li>
+<li><a href="#related">related</a></li>
+<li><a href="#cache">cache</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8">常见的一些使用</a>
+<ul>
+<li><a href="#%E6%9F%A5%E6%89%BE%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0">查找网站后台</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E7%9A%84%E7%A8%8B%E5%BA%8F">查看服务器使用的程序</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E">查看上传漏洞</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E7%9A%84%E7%BD%91%E7%AB%99">查看可能存在SQL注入的网站</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%8E%E8%AE%B0">后记</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -78,17 +107,70 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">cover_path</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">Google Hacking语法记录</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-10-30 / 1 min read
+          2021-04-22 / 2 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://Morn-zh.github.io/post-images/cover_note.jpg" alt="">
-        
         <div class="post-content yue">
-          <p>https://Morn-zh.github.io/post-images/cover_note.jpg</p>
-<p>https://Morn-zh.github.io/post-images/cover_idea.jpg</p>
-<p>https://Morn-zh.github.io/post-images/cover_computer.png</p>
+          <h1 id="google-hacking">Google Hacking</h1>
+<p>其实就是谷歌搜索的语法，某些参数在其他搜索引擎中也适用</p>
+<h2 id="基本检索">基本检索</h2>
+<ul>
+<li>逻辑与：and</li>
+<li>逻辑或： or</li>
+<li>逻辑非： -</li>
+<li>完整匹配：&quot;关键词&quot;</li>
+<li>通配符：* ?</li>
+</ul>
+<pre><code>&quot;好玩的&quot; or &quot;好笑的&quot; -zhihu.com
+</code></pre>
+<p>完整匹配“好玩的”或者“好笑的”，排除知乎的结果</p>
+<h2 id="高级检索">高级检索</h2>
+<h3 id="site">site</h3>
+<p>指定站点</p>
+<h3 id="inurl">inurl</h3>
+<p>指定url中的信息</p>
+<h3 id="intitle">intitle</h3>
+<p>指定标题中的信息</p>
+<pre><code>site:bilibili.com inurl:搞笑 intitle:up主
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/Google_Hacking/Snipaste_2021-04-22_20-17-56.png" alt="Snipaste_2021-04-22_20-17-56" loading="lazy"></figure>
+<p><br>以上三个是经常遇到的，都是字面意思</p>
+<br>
+<h3 id="intext">intext</h3>
+<p>在文本中</p>
+<h3 id="allinurl">allinurl</h3>
+<p>类似inurl，只不过可以指定多个关键词</p>
+<h3 id="filetype">filetype</h3>
+<p>指定文件类型</p>
+<h3 id="link">link</h3>
+<p>返回所有指向该url的页面</p>
+<h3 id="related">related</h3>
+<p>返回与该url类似的所有网站</p>
+<h3 id="cache">cache</h3>
+<p>返回关于该url的缓存页面</p>
+<h2 id="常见的一些使用">常见的一些使用</h2>
+<h3 id="查找网站后台">查找网站后台</h3>
+<p>site:xx.com intext:管理<br>
+site:xx.com inurl:login<br>
+site:xx.com intitle:后台</p>
+<h3 id="查看服务器使用的程序">查看服务器使用的程序</h3>
+<p>site:xx.com filetype:asp<br>
+site:xx.com filetype:php<br>
+site:xx.com filetype:jsp<br>
+site:xx.com filetype:aspx</p>
+<h3 id="查看上传漏洞">查看上传漏洞</h3>
+<p>site:xx.com inurl:file<br>
+site:xx.com inurl:load</p>
+<h3 id="查看可能存在sql注入的网站">查看可能存在SQL注入的网站</h3>
+<pre><code>inurl:id=1
+</code></pre>
+<h2 id="后记">后记</h2>
+<p>本篇主要是用来记录谷歌搜索引擎的相关语法，方便以后的信息收集</p>
+<p>参考：</p>
+<p>https://blog.csdn.net/qq_36119192/article/details/84029809（强烈推荐）</p>
+<p>http://www.williamlong.info/archives/150.html</p>
 
         </div>
 
@@ -98,6 +180,15 @@
         <div class="flex justify-between py-8">
           
 
+          
+            <div class="next-post">
+              <a href="https://Morn-zh.github.io/post/chang-jian-web-lou-dong-fang-yu-cuo-shi-hui-zong/">
+                <h3 class="post-title">
+                  常见web漏洞防御措施汇总
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
 
