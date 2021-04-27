@@ -33,7 +33,15 @@
             文章目录
           </p>
           <div class="toc-container hidden lg:block">
-            
+            <ul class="markdownIt-TOC">
+<li><a href="#rsa%E5%8A%A0%E5%AF%86%E7%AD%BE%E5%90%8D%E8%BF%87%E7%A8%8B">RSA加密/签名过程</a>
+<ul>
+<li><a href="#%E5%8A%A0%E5%AF%86-%E7%AD%BE%E5%90%8D%E7%9A%84%E7%9B%AE%E7%9A%84">加密、签名的目的</a></li>
+<li><a href="#%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B">详细过程</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -78,17 +86,34 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">cover_path</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">RSA加密/签名过程</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2020-10-30 / 1 min read
+          2021-04-27 / 2 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://Morn-zh.github.io/post-images/cover_note.jpg" alt="">
-        
         <div class="post-content yue">
-          <p>https://Morn-zh.github.io/post-images/cover_note.jpg</p>
-<p>https://Morn-zh.github.io/post-images/cover_idea.jpg</p>
-<p>https://Morn-zh.github.io/post-images/cover_computer.png</p>
+          <h1 id="rsa加密签名过程">RSA加密/签名过程</h1>
+<p>面试的时候碰到这个问题，但是回答的不是很好，下来自己再总结下</p>
+<h2 id="加密-签名的目的">加密、签名的目的</h2>
+<p>加密的目的：保证自己发出的东西，只有收件方才能破解</p>
+<p>签名的目的：向收件方证明这东西是自己发的（以及防重放、防篡改、防抵赖、防伪造）</p>
+<p>加密、解密过程用到的算法：加密算法、解密算法<br>
+签名、验签过程用到的算法：签名算法、验签算法</p>
+<h2 id="详细过程">详细过程</h2>
+<p>前提：双方都有各自的公私钥（<strong>两套</strong>不同的公私钥组合），并且通过前期的通信拥有对方的公钥。</p>
+<p>加密/解密和签名/验签完整过程:<br>
+A--&gt;B（A发送给B）</p>
+<p>1、A用hash算法对待发内容<code>content</code>生成摘要<code>summary</code><br>
+2、A用自己的私钥<code>secret_key_A</code>对摘要<code>summary</code>进行签名得到签名<code>signature</code><br>
+3、A使用B的公钥<code>public_key_B</code>对（签名<code>signature</code>+待发内容<code>content</code>）进行加密得到密文<code>encrypted_string</code><br>
+4、A将密文<code>encrypted_string</code>发送给B</p>
+<p>5、B接收到密文<code>encrypted_string</code>，使用自己的私钥<code>secret_key_B</code>进行解密，分离出签名<code>signature</code>、接收内容<code>content</code><br>
+6、B用A的公钥<code>public_key_A</code>解密签名<code>signature</code>得到摘要1<code>summary_1</code><br>
+7、B用同样的hash算法对接收内容<code>content</code>生成摘要2<code>summary_2</code><br>
+8、B对比摘要1和摘要2是否相等，相等即验证了消息是A发的并且传输的过程中为被篡改或伪造</p>
+<p>图解<br>
+<img src="https://img-blog.csdnimg.cn/20200910095112326.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2MjM4Nzc1,size_16,color_FFFFFF,t_70#pic_center" alt="img" loading="lazy"><br>
+图片来自：https://blog.csdn.net/m0_46238775/article/details/108507660?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-5&amp;spm=1001.2101.3001.4242</p>
 
         </div>
 
@@ -98,6 +123,15 @@
         <div class="flex justify-between py-8">
           
 
+          
+            <div class="next-post">
+              <a href="https://Morn-zh.github.io/post/dedecms-v57-sp2-qian-tai-wen-jian-shang-chuan-lou-dong-cve-2018-20129fu-xian/">
+                <h3 class="post-title">
+                  DedeCMS V5.7 SP2前台文件上传漏洞(CVE-2018-20129)复现
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
 
