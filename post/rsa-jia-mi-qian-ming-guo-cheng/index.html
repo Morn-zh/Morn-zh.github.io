@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Morn-zh</title>
 <meta name="description" content="我等着，等着你" />
-<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1619514936400">
+<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1619515480418">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://Morn-zh.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1619514936400" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1619515480418" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Morn-zh</h1>
       </div>
@@ -37,7 +37,7 @@
 <li><a href="#rsa%E5%8A%A0%E5%AF%86%E7%AD%BE%E5%90%8D%E8%BF%87%E7%A8%8B">RSA加密/签名过程</a>
 <ul>
 <li><a href="#%E5%8A%A0%E5%AF%86-%E7%AD%BE%E5%90%8D%E7%9A%84%E7%9B%AE%E7%9A%84">加密、签名的目的</a></li>
-<li><a href="#%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B">详细过程</a></li>
+<li><a href="#%E5%8A%A0%E5%AF%86%E9%85%8D%E5%90%88%E7%AD%BE%E5%90%8D%E8%BF%9B%E8%A1%8C%E6%B6%88%E6%81%AF%E4%BC%A0%E8%BE%93%E7%9A%84%E5%AE%8C%E6%88%90%E8%BF%87%E7%A8%8B">加密配合签名进行消息传输的完成过程</a></li>
 </ul>
 </li>
 </ul>
@@ -99,7 +99,8 @@
 <p>签名的目的：向收件方证明这东西是自己发的（以及防重放、防篡改、防抵赖、防伪造）</p>
 <p>加密、解密过程用到的算法：加密算法、解密算法<br>
 签名、验签过程用到的算法：签名算法、验签算法</p>
-<h2 id="详细过程">详细过程</h2>
+<p>加密和签名是<strong>两个过程</strong>，一般配合使用</p>
+<h2 id="加密配合签名进行消息传输的完成过程">加密配合签名进行消息传输的完成过程</h2>
 <p>前提：双方都有各自的公私钥（<strong>两套</strong>不同的公私钥组合），并且通过前期的通信拥有对方的公钥。</p>
 <p>加密/解密和签名/验签完整过程:<br>
 A--&gt;B（A发送给B）</p>

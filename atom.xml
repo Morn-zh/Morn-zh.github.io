@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-27T09:15:40.174Z</updated>
+    <updated>2021-04-27T09:24:46.886Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -23,7 +23,8 @@
 <p>签名的目的：向收件方证明这东西是自己发的（以及防重放、防篡改、防抵赖、防伪造）</p>
 <p>加密、解密过程用到的算法：加密算法、解密算法<br>
 签名、验签过程用到的算法：签名算法、验签算法</p>
-<h2 id="详细过程">详细过程</h2>
+<p>加密和签名是<strong>两个过程</strong>，一般配合使用</p>
+<h2 id="加密配合签名进行消息传输的完成过程">加密配合签名进行消息传输的完成过程</h2>
 <p>前提：双方都有各自的公私钥（<strong>两套</strong>不同的公私钥组合），并且通过前期的通信拥有对方的公钥。</p>
 <p>加密/解密和签名/验签完整过程:<br>
 A--&gt;B（A发送给B）</p>
