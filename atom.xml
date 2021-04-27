@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-27T09:24:46.886Z</updated>
+    <updated>2021-04-27T12:37:07.622Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -11,7 +11,7 @@
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
     <entry>
-        <title type="html"><![CDATA[RSA加密/签名过程]]></title>
+        <title type="html"><![CDATA[RSA加密/签名过程+SSL+面试小结]]></title>
         <id>https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/</id>
         <link href="https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/">
         </link>
@@ -39,6 +39,21 @@ A--&gt;B（A发送给B）</p>
 <p>图解<br>
 <img src="https://img-blog.csdnimg.cn/20200910095112326.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2MjM4Nzc1,size_16,color_FFFFFF,t_70#pic_center" alt="img" loading="lazy"><br>
 图片来自：https://blog.csdn.net/m0_46238775/article/details/108507660?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-5&amp;spm=1001.2101.3001.4242</p>
+<h1 id="ssl">SSL</h1>
+<p>安全套接字，https协议的重要组成部分<br>
+以下几篇文章配合阅读，写的比我更好、更详细</p>
+<p>SSL单向验证：https://blog.csdn.net/sarafina527/article/details/89333536?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-9&amp;spm=1001.2101.3001.4242</p>
+<p>HTTPS过程：https://www.cnblogs.com/xtiger/p/11026870.html<br>
+SSL双向验证：https://blog.csdn.net/jingzi123456789/article/details/81020747</p>
+<p>计网小结：https://blog.csdn.net/u010858605/article/details/113686420</p>
+<h1 id="面试小结">面试小结</h1>
+<p>第一次面试，面试的对象还是字节，心里还是忐忑的。<br>
+结果暂时未知，自我感觉不太好，暴露了些问题，需要去解决</p>
+<ul>
+<li>基础不牢，对语言的理解不够，还需要深入理解</li>
+<li>算法丢人了，脑袋直接短路，练得还不够，加强code方面的练习--&gt;leetcode走起</li>
+<li>继续学习，不要停下来！</li>
+</ul>
 ]]></content>
     </entry>
     <entry>
