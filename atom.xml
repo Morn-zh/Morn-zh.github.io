@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-29T14:09:04.618Z</updated>
+    <updated>2021-04-29T14:13:30.237Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -23,6 +23,10 @@ http://localhost/phpMyAdmin4.8.5/changelog.php</p>
 <p>phpMyAdmin常规getshell<br>
 1.可以看看网站是否存在注入利用注入出来的账号密码登录（x<br>
 2.使用phpmyadmin爆破工具进行爆破进入后台（x</p>
+<p>查找物理路径</p>
+<p>phpinfo.php</p>
+<pre><code>select @@basedir;
+</code></pre>
 <p>查看写入权限</p>
 <pre><code>show variables like '%secure%'
 </code></pre>
