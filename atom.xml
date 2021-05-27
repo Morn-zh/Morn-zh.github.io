@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-05-14T02:56:45.117Z</updated>
+    <updated>2021-05-27T04:32:28.806Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -10,6 +10,129 @@
     <logo>https://Morn-zh.github.io/images/avatar.png</logo>
     <icon>https://Morn-zh.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Morn-zh</rights>
+    <entry>
+        <title type="html"><![CDATA[cncd爬虫-20210527]]></title>
+        <id>https://Morn-zh.github.io/post/cncd-pa-chong-20210527/</id>
+        <link href="https://Morn-zh.github.io/post/cncd-pa-chong-20210527/">
+        </link>
+        <updated>2021-05-27T04:30:29.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/QQ%E6%88%AA%E5%9B%BE20210527122945.png" alt="QQ截图20210527122945" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/cnvd%E7%88%AC%E8%99%AB%E2%80%9420210525-1622089886246.png" alt="cnvd爬虫—20210525" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CSRF绕过]]></title>
+        <id>https://Morn-zh.github.io/post/csrf-rao-guo/</id>
+        <link href="https://Morn-zh.github.io/post/csrf-rao-guo/">
+        </link>
+        <updated>2021-05-24T04:32:16.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="csrf绕过">CSRF绕过</h1>
+<p>CSRF针对客户端，让用户在不知情的条件下执行某些请求</p>
+<p>常见的验证手段</p>
+<ul>
+<li>
+<p>referer</p>
+<p>验证referrer是否在允许的域内</p>
+</li>
+<li>
+<p>token</p>
+<p>验证token是否相同，存在于前端，也存在于后端</p>
+</li>
+</ul>
+<h2 id="绕过referrer的方式">绕过referrer的方式</h2>
+<h3 id="1-使referer为空">1、使referer为空</h3>
+<p>利用其它的协议，从而让请求头中referer为空</p>
+<p>可用的协议如下</p>
+<p><code>ftp://</code><br>
+<code>file://</code><br>
+<code>data:</code><br>
+<code>https--&gt;http</code>(在https的站点下发起http请求)<br>
+<code>javascript</code>（未验证）</p>
+<p>可能用到的html标签</p>
+<p><code>iframe</code>(在src属性中)–InternetExplorer下不⼯作----&gt;一般使用这个<br>
+<code>embed</code>(在src属性中)–InternetExplorer及MicrosoftEdge下不⼯作<br>
+<code>object</code>(在data属性中)–InternetExplorer及MicrosoftEdge下不⼯作</p>
+<h4 id="实践data协议绕过">实践：data协议绕过</h4>
+<h5 id="本地环境">本地环境</h5>
+<p>php5.7</p>
+<p>pikachu靶场</p>
+<p>notepad++</p>
+<p>BS</p>
+<h5 id="准备工作">准备工作</h5>
+<p>目标：让用户在不知情的情况下修改自己的手机号</p>
+<p>要求：此时用户必须处于登录状态，所以说执行csrf攻击还是需要用户配合（用户：我是被迫的！</p>
+<h5 id="开始">开始</h5>
+<p>用户登录</p>
+<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-31-07.png" alt="Snipaste_2021-05-22_16-31-07" loading="lazy"></figure>
+<p>抓取并修改信息的数据包</p>
+<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-32-46.png" alt="Snipaste_2021-05-22_16-32-46" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-33-18.png" alt="Snipaste_2021-05-22_16-33-18" loading="lazy"></figure>
+<p>可以看到，我改变了数据包中手机的信息，然后我们使用BS提供CSRFpoc生成poc（这里别忘了将原本的修改请求drop掉，防止造成影响</p>
+<figure data-type="image" tabindex="4"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-33-37.png" alt="Snipaste_2021-05-22_16-33-37" loading="lazy"></figure>
+<p>保存到本地，命名为test.html</p>
+<figure data-type="image" tabindex="5"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-35-51.png" alt="Snipaste_2021-05-22_16-35-51" loading="lazy"></figure>
+<p>改写poc，使用<code>data</code>协议，并且对表单内容进行base64编码，防止表单中的某些内容造成干扰（编码啥的，容易造成错误</p>
+<figure data-type="image" tabindex="6"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-36-57.png" alt="Snipaste_2021-05-22_16-36-57" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-37-19.png" alt="Snipaste_2021-05-22_16-37-19" loading="lazy"></figure>
+<p>至此，脚本写完，将这个链接发送给用户，如果是get请求会直接执行，post请求需要构造一下，让用户再好奇的驱使下点一下（社工</p>
+<p>比如，网址就为127.0.0.1/test.html</p>
+<p>用户看到的页面是这样的</p>
+<figure data-type="image" tabindex="8"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-51-54.png" alt="Snipaste_2021-05-22_16-51-54" loading="lazy"></figure>
+<p>用户点击后</p>
+<figure data-type="image" tabindex="9"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-52-13.png" alt="Snipaste_2021-05-22_16-52-13" loading="lazy"></figure>
+<p>此时再去看下，用户的手机号，发现已经被更改</p>
+<figure data-type="image" tabindex="10"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-52-59.png" alt="Snipaste_2021-05-22_16-52-59" loading="lazy"></figure>
+<p>在用户点击这个按钮之后，就发送了一条post信息，修改了Ta的手机号</p>
+<p>我们查看下用户点击时发送的包中的referer</p>
+<figure data-type="image" tabindex="11"><img src="https://Morn-zh.github.io/post-images/referer%E7%BB%95%E8%BF%87/Snipaste_2021-05-22_16-52-38.png" alt="Snipaste_2021-05-22_16-52-38" loading="lazy"></figure>
+<p>可以看到，并没有referer信息，达到绕过referer的目的（没有referer，它可能就不验证了</p>
+<h3 id="2-绕过referer过滤">2、绕过referer过滤</h3>
+<p>这个绕过主要是利用网站对referer验证的不严谨</p>
+<h4 id="绕过匹配某些字段">绕过匹配某些字段</h4>
+<ul>
+<li>
+<p>创建对应的文件夹</p>
+<pre><code> www.attacker.com/target.com
+</code></pre>
+<p>此时<code>target.com</code>是我们网站下的文件（夹）名</p>
+</li>
+<li>
+<p>创建对应的子域名</p>
+<pre><code>target.com.attacker.com
+</code></pre>
+<p>此时<code>target.com</code>是我们网站的子域名</p>
+</li>
+</ul>
+<h4 id="利用网站本身的跳转">利用网站本身的跳转</h4>
+<pre><code>www.target.com/login/redirect_url= www.attacker.com
+www.target.com/login/callback= www.attacker.com
+</code></pre>
+<p>利用网站本身的跳转连接，这样产生的referer就是网站本身，那么验证就过去了</p>
+<h2 id="绕过token的方式">绕过token的方式</h2>
+<h3 id="token验证机制">token验证机制</h3>
+<h4 id="服务器验证">服务器验证</h4>
+<p>服务器生成令牌token，然后发送给用户，用户之后的请求带有该token，服务器接收到该带有token的请求时，将验证该token，验证成功，继续执行后续操作。否则，不成功。</p>
+<p>验证成功后，更新token，重复上述过程</p>
+<p>这种机制类似一次一密，防止中间人攻击</p>
+<h4 id="前端验证极度不安全">前端验证（极度不安全）</h4>
+<p>与上面那种基于服务器的token一样，生成token发送给客户端</p>
+<p>而验证是发生在客户端发起请求的时候。它会验证请求中的token参数与cookie中的token是否相同</p>
+<h3 id="如何绕过">如何绕过</h3>
+<p>绕过都是关键是获得token</p>
+<p>如何能够得到token呢？</p>
+<p>如果token在页面源码中存在（一般位于hidden标签内），我们可以通过定位到该值，应用即可（解析页面，xpath定位或者直接应用BS的提取功能）</p>
+<p>如果token位于url中，通过xss使其访问自己的站点，此时我们可以在访问日志中得到该url，提取出即可</p>
+<p>如果token位于cookie中，试着用xss配合着提取出token</p>
+<p>如果还不行，试着删除token，或者设置为空（或空列表），服务器可能就会放过你（看负责验证的应用程序的验证逻辑是咋样了</p>
+<p>如果是前端的验证，配合xss一样可以提取出cookie中的token</p>
+<p>但如果不行呢？我们可以尝试下会话劫持和会话固定（伪造token，自己验证自己</p>
+<p>session攻击（会话劫持+固定）与防御：https://www.cnblogs.com/phpstudy2015-6/p/6776919.html</p>
+<p>参考文章</p>
+<p>关于CSRF 和 csrftoken： https://www.cnblogs.com/sablier/p/11099909.html</p>
+<p>cookie、session与token的真正区别：https://blog.csdn.net/whl190412/article/details/90024671?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&amp;spm=1001.2101.3001.4242</p>
+<p>cookie，session和token的概念以及区别：http://cache.baiducontent.com/c?m=5vE7nbvcJ9DPTmSffAAG-Abj7lSGiJpuF91JgLmCyY-OgApFY9ms5t5W4C5hdbhX4mlrNVmbwqaL4IPBNxMo3agK9OFS67jj45koQ4v8FOPqvfb1KBImTF9P0AnFMFEBkSHzKPVVWWl_wrfIjqo52YnBoVW65DFHMRXdOyZgHHA1a5PiM1OGk0Q6NnpWQEfC&amp;p=8e759a46d1891fe70be296244f40&amp;newp=8b2a971896851aff57ee9360494192695d0fc20e3ddcd101298ffe0cc4241a1a1a3aecbf2c261103d4c57a6007ad4356edfa3d723d0034f1f689df08d2ecce7e72c8616f&amp;s=cfcd208495d565ef&amp;user=baidu&amp;fm=sc&amp;query=session%BA%CDtoken%B5%C4%C7%F8%B1%F0&amp;qid=eab3de350024cebb&amp;p1=3</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[IIS短文件名泄露]]></title>
         <id>https://Morn-zh.github.io/post/iis-duan-wen-jian-ming-xie-lu/</id>
@@ -663,114 +786,6 @@ select '&lt;?php eval($_POST['a']);?&gt;'
 </code></pre>
 <p>参考文章：</p>
 <p>https://www.cnblogs.com/xhcbj/p/13356580.html</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[phpinfo中值得注意的点]]></title>
-        <id>https://Morn-zh.github.io/post/phpinfo-zhong-zhi-de-zhu-yi-de-dian/</id>
-        <link href="https://Morn-zh.github.io/post/phpinfo-zhong-zhi-de-zhu-yi-de-dian/">
-        </link>
-        <updated>2021-04-27T13:13:49.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="如何获取phpinfo页面">如何获取phpinfo页面</h2>
-<ul>
-<li>扫描器</li>
-<li>Google Hacking</li>
-<li>⽹站⾃有功能</li>
-<li>同个服务器的其他站（旁站）</li>
-</ul>
-<h2 id="需要注意的参数">需要注意的参数</h2>
-<ul>
-<li>
-<p>System</p>
-<p>目标机器的操作系统</p>
-</li>
-<li>
-<p>_ENV[&quot;SCRIPT_FILENAME&quot;]</p>
-<p>网站物理路径</p>
-</li>
-<li>
-<p>_SERVER[&quot;SERVER_ADDR&quot;]</p>
-<p>目标服务器的真实IP</p>
-</li>
-<li>
-<p>_SERVER[&quot;SERVER_SOFTWARE&quot;]</p>
-<p>目标服务器的Web服务器版本</p>
-</li>
-<li>
-<p>allow_url_include</p>
-<p>远程包含</p>
-<p><a href="https://blog.csdn.net/sunjikui1255326447/article/details/106974354/">什么是远程包含？</a></p>
-</li>
-<li>
-<p>disable_functions</p>
-<p>查看禁用函数</p>
-<p><a href="https://www.tr0y.wang/2018/04/18/PHPDisalbedfunc/index.html">PHP disable_functions Bypass 的方法探究 - Tr0y's Blog</a></p>
-</li>
-</ul>
-<p>php 下能够执行系统命令的函数有哪些？</p>
-<pre><code>assert,system,passthru,exec,pcntl_exec,shell_exec,popen,proc_open,``(反单引号)
-Copy
-</code></pre>
-<p>那么 便可以看看 php.ini 中的 disable_function 漏过了哪些函数，若存在漏网之鱼，直接利用即可</p>
-<p>待看文章：</p>
-<p>php的笔记学习：https://www.kancloud.cn/a173512/php_note/1690470</p>
-<p>绕过disable_functions：https://www.meetsec.cn/（有点难啃，后续得查看下相关的资料）</p>
-<p>windows下cmd命令：https://www.jb51.net/article/141568.htm</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[SSL+面试小结]]></title>
-        <id>https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/</id>
-        <link href="https://Morn-zh.github.io/post/rsa-jia-mi-qian-ming-guo-cheng/">
-        </link>
-        <updated>2021-04-27T08:34:47.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="ssl">SSL</h1>
-<p>安全套接层，https协议的重要组成部分<br>
-以下几篇文章配合阅读，写的比我更好、更详细</p>
-<p>SSL单向验证：https://blog.csdn.net/sarafina527/article/details/89333536?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-9&amp;spm=1001.2101.3001.4242</p>
-<p>HTTPS过程：https://www.cnblogs.com/xtiger/p/11026870.html<br>
-SSL双向验证：https://blog.csdn.net/jingzi123456789/article/details/81020747</p>
-<p>全过程图解：https://blog.csdn.net/u011779724/article/details/80776776<br>
-HTTPS篇之SSL握手过程详解：https://blog.csdn.net/kunyus/article/details/98754475?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;dist_request_id=1619765853125_25768&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control（推荐）<br>
-计网小结：https://blog.csdn.net/u010858605/article/details/113686420（推荐）</p>
-<p><strong>SSL/TLS握手方式有两种，一种基于RSA，一种基于Diffie-Hellman。</strong></p>
-<h2 id="rsa">RSA</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20190807155642447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2t1bnl1cw==,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
-<h2 id="dh">DH</h2>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20190807160033447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2t1bnl1cw==,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
-<h1 id="https通信过程">HTTPS通信过程</h1>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210210085413553.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA4NTg2MDU=,size_16,color_FFFFFF,t_70" alt="" loading="lazy"></figure>
-<h1 id="rsa加密签名过程">RSA加密/签名过程</h1>
-<h2 id="加密-签名的目的">加密、签名的目的</h2>
-<p>加密的目的：保证自己发出的东西，只有收件方才能破解</p>
-<p>签名的目的：向收件方证明这东西是自己发的（以及防重放、防篡改、防抵赖、防伪造）</p>
-<p>加密、解密过程用到的算法：加密算法、解密算法<br>
-签名、验签过程用到的算法：签名算法、验签算法</p>
-<p>加密和签名是<strong>两个过程</strong>，可以配合使用</p>
-<h2 id="加密配合签名进行消息传输的完成过程">加密配合签名进行消息传输的完成过程</h2>
-<p>前提：双方都有各自的公私钥（<strong>两套</strong>不同的公私钥组合），并且通过前期的通信拥有对方的公钥。</p>
-<p>加密/解密和签名/验签完整过程:<br>
-A--&gt;B（A发送给B）</p>
-<p>1、A用hash算法对待发内容<code>content</code>生成摘要<code>summary</code><br>
-2、A用自己的私钥<code>secret_key_A</code>对摘要<code>summary</code>进行签名得到签名<code>signature</code><br>
-3、A使用B的公钥<code>public_key_B</code>对（签名<code>signature</code>+待发内容<code>content</code>）进行加密得到密文<code>encrypted_string</code><br>
-4、A将密文<code>encrypted_string</code>发送给B</p>
-<p>5、B接收到密文<code>encrypted_string</code>，使用自己的私钥<code>secret_key_B</code>进行解密，分离出签名<code>signature</code>、接收内容<code>content</code><br>
-6、B用A的公钥<code>public_key_A</code>解密签名<code>signature</code>得到摘要1<code>summary_1</code><br>
-7、B用同样的hash算法对接收内容<code>content</code>生成摘要2<code>summary_2</code><br>
-8、B对比摘要1和摘要2是否相等，相等即验证了消息是A发的并且传输的过程中为被篡改或伪造</p>
-<p>图解<br>
-<img src="https://img-blog.csdnimg.cn/20200910095112326.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2MjM4Nzc1,size_16,color_FFFFFF,t_70#pic_center" alt="img" loading="lazy"><br>
-图片来自：https://blog.csdn.net/m0_46238775/article/details/108507660?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-5&amp;spm=1001.2101.3001.4242</p>
-<h1 id="面试小结">面试小结</h1>
-<p>第一次面试，面试的对象还是字节，心里还是忐忑的。<br>
-结果暂时未知，自我感觉不太好，暴露了些问题，需要去解决</p>
-<ul>
-<li>基础不牢，对语言的理解不够，还需要深入理解</li>
-<li>算法丢人了，脑袋直接短路，练得还不够，加强code方面的练习--&gt;leetcode走起</li>
-<li>继续学习，不要停下来！</li>
-</ul>
-<p>复习TCP/IP：https://blog.csdn.net/qzcsu/article/details/72861891?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control</p>
 ]]></content>
     </entry>
 </feed>
