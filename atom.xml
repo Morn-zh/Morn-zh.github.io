@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Morn-zh.github.io</id>
     <title>Morn-zh</title>
-    <updated>2021-05-28T16:05:14.386Z</updated>
+    <updated>2021-05-28T16:13:31.337Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Morn-zh.github.io"/>
     <link rel="self" href="https://Morn-zh.github.io/atom.xml"/>
@@ -16,8 +16,8 @@
         <link href="https://Morn-zh.github.io/post/cncd-pa-chong-20210527/">
         </link>
         <updated>2021-05-27T04:30:29.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="C:%5CUsers%5C26959%5CDocuments%5CGridea%5Cpost-images%5Ccnkv%E7%88%AC%E8%99%AB%5CQQ%E6%88%AA%E5%9B%BE20210527122945-1622217792871.png" alt="QQ截图20210527122945" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="C:%5CUsers%5C26959%5CDocuments%5CGridea%5Cpost-images%5Ccnkv%E7%88%AC%E8%99%AB%5Ccnvd%E7%88%AC%E8%99%AB%E2%80%9420210525-1622089886246-1622217792872.png" alt="cnvd爬虫—20210525" loading="lazy"></figure>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/QQ%E6%88%AA%E5%9B%BE20210527122945-1622217792871.png" alt="QQ截图20210527122945" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/cnvd%E7%88%AC%E8%99%AB%E2%80%9420210525-1622089886246-1622217792872.png" alt="cnvd爬虫—20210525" loading="lazy"></figure>
 <p>============== 05-28 23:58===============</p>
 <p>基本框架搭建完成</p>
 <p>就是爬取太快容易被ban，明天想想办法</p>
