@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Morn-zh</title>
 <meta name="description" content="我等着，等着你" />
-<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1622218400130">
+<link rel="shortcut icon" href="https://Morn-zh.github.io/favicon.ico?v=1622808255537">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://Morn-zh.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1622218400130" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://Morn-zh.github.io/images/avatar.png?v=1622808255537" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Morn-zh</h1>
       </div>
@@ -33,7 +33,10 @@
             文章目录
           </p>
           <div class="toc-container hidden lg:block">
-            
+            <ul class="markdownIt-TOC">
+<li><a href="#cookie%E6%B1%A0">cookie池</a></li>
+</ul>
+
           </div>
         </div>
       
@@ -78,18 +81,93 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">cncd爬虫-20210527</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">cncd爬虫-20210604</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2021-05-27 / 1 min read
+          2021-05-27 / 3 min read
         </div>
         
         <div class="post-content yue">
-          <figure data-type="image" tabindex="1"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/QQ%E6%88%AA%E5%9B%BE20210527122945-1622217792871.png" alt="QQ截图20210527122945" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/cnvd%E7%88%AC%E8%99%AB%E2%80%9420210525-1622089886246-1622217792872.png" alt="cnvd爬虫—20210525" loading="lazy"></figure>
-<p>============== 05-28 23:58===============</p>
-<p>基本框架搭建完成</p>
-<p>就是爬取太快容易被ban，明天想想办法</p>
-<figure data-type="image" tabindex="3"><img src="https://Morn-zh.github.io/post-images/cnkv%E7%88%AC%E8%99%AB/QQ%E6%88%AA%E5%9B%BE20210529000250.png" alt="QQ截图20210529000250" loading="lazy"></figure>
+          <h1 id="cookie池">cookie池</h1>
+<p>import time<br>
+import pymongo<br>
+import requests<br>
+import re<br>
+import execjs<br>
+import hashlib<br>
+import json<br>
+from requests.utils import add_dict_to_cookiejar</p>
+<p>MONGODB_HOST = &quot;127.0.0.1&quot;<br>
+MONGODB_PORT = 27017<br>
+MONGODB_DBNAME = &quot;cnvd_cookie&quot;<br>
+MONGODB_SHEETNAME = &quot;form&quot;</p>
+<p>host = MONGODB_HOST<br>
+port = MONGODB_PORT<br>
+dbname = MONGODB_DBNAME<br>
+sheetname = MONGODB_SHEETNAME<br>
+client = pymongo.MongoClient(host=host, port=port)<br>
+db = client[dbname]<br>
+collection = db[sheetname]</p>
+<p>def encrypt(data):<br>
+chars = len(data['chars'])<br>
+for i in range(chars):<br>
+for j in range(chars):<br>
+clearance = data['bts'][0] + data['chars'][i] + data['chars'][j] + data['bts'][1]<br>
+encrypt = None<br>
+if data['ha'] == 'md5':<br>
+encrypt = hashlib.md5()<br>
+elif data['ha'] == 'sha1':<br>
+encrypt = hashlib.sha1()<br>
+elif data['ha'] == 'sha256':<br>
+encrypt = hashlib.sha256()<br>
+encrypt.update(clearance.encode())<br>
+result = encrypt.hexdigest()<br>
+if result == data['ct']:<br>
+return clearance</p>
+<p>def get_cookie_dict():<br>
+url = 'https://www.cnvd.org.cn/flaw/list.htm'<br>
+header = {<br>
+&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36&quot;}<br>
+session = requests.session()<br>
+res1 = session.get(url, headers=header)<br>
+jsl_clearance_s = re.findall(r'cookie=(.<em>?);location', res1.text)[0]<br>
+jsl_clearance_s = str(execjs.eval(jsl_clearance_s)).split('=')[1].split(';')[0]<br>
+# add_dict_to_cookiejar方法添加cookie<br>
+add_dict_to_cookiejar(session.cookies, {'__jsl_clearance_s': jsl_clearance_s})<br>
+res2 = session.get(url, headers=header)<br>
+# 提取go方法中的参数<br>
+data = json.loads(re.findall(r';go((.</em>?))', res2.text)[0])<br>
+jsl_clearance_s = encrypt(data)<br>
+# 修改cookie<br>
+add_dict_to_cookiejar(session.cookies, {'__jsl_clearance_s': jsl_clearance_s})<br>
+# 插入到数据库<br>
+insert_db(session.cookies.get_dict())<br>
+return session.cookies.get_dict()</p>
+<p>def insert_db(cookie_dict):<br>
+collection.insert(cookie_dict)</p>
+<p>def delete_db(__jsluid_s):<br>
+sum=collection.find().count()<br>
+collection.remove({'__jsluid_s': __jsluid_s})<br>
+next_sum=collection.find().count()<br>
+print(&quot;之前：&quot;,sum,&quot; 之后：&quot;,next_sum)</p>
+<p>def get_one_cookie():<br>
+db_dict = list(collection.aggregate([{'$sample': {'size': 1}}]))<br>
+if db_dict:<br>
+del db_dict[0]['_id']<br>
+return db_dict[0]<br>
+else:<br>
+return None</p>
+<p>def run():<br>
+while 1:<br>
+if collection.find().count() &lt; 20:<br>
+get_cookie_dict()<br>
+print(&quot;更新时间：&quot;,time.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;, time.localtime()))<br>
+print(&quot;当前cookie池cookie条数：&quot;, collection.find().count())<br>
+time.sleep(0.5)<br>
+else:<br>
+print(&quot;更新时间：&quot;,time.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;, time.localtime()))<br>
+time.sleep(0.5)</p>
+<p>if <strong>name</strong> == '<strong>main</strong>':<br>
+run()</p>
 
         </div>
 
